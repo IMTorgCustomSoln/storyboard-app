@@ -1,9 +1,15 @@
 <template>
     <div class="panel">
     <Splitpanes >
-      <Pane min-size="5">1</Pane>
-      <Pane min-size="5">2</Pane>
-      <Pane min-size="5">3</Pane>
+      <Pane min-size="5">
+        <slot name="outline"></slot>
+      </Pane>
+      <Pane min-size="5">
+        <slot name="image"></slot>
+      </Pane>
+      <Pane min-size="5">
+        <slot name="layout"></slot>
+      </Pane>
     </Splitpanes>
 </div>
 </template>
@@ -22,10 +28,10 @@ must use the following in `vite.config.js`:
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 
-
 export default{
     name: 'SplitPane',
     components: { Splitpanes, Pane },
+    compatConfig: { COMPONENT_V_MODEL: false },
     data(){
         return {
         }
@@ -41,12 +47,13 @@ export default{
 
 .splitpanes__pane {
   box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;
+  display: block; 
+  padding: 10px;
   justify-content: center;
   align-items: center;
-  display: flex;
+  /*display: flex;*/
   position: relative;
 }
-
 
 em.specs {
   font-size: 0.2em;
@@ -82,18 +89,21 @@ p {
 */
 
 
-/* increase for touchscreen */
+/* increase for touchscreen 
 
 .splitpanes {
   background-color: #f2f2f2;
 
 &__pane {
   justify-content: center;
-  align-items: center;
+  align-items: top;
   display: flex;
 }
 
-&__splitter {background-color: #ccc;position: relative;}
+&__splitter {
+  background-color: #ccc;
+  position: relative;
+}
 
 &__splitter:before {
   content: '';
@@ -108,8 +118,15 @@ p {
 &--horizontal > &__splitter:before {top: -30px;bottom: -30px;}
 &__splitter:hover:before {background-color: rgba(255, 0, 0, 0.3);}
 }
+*/
+
+.panel {
+    height: 100%;
+    margin: 0;
+}
 
 
+/*
 .panel {
     height: 100%;
     margin: 0;
@@ -117,6 +134,7 @@ font-family: Helvetica, Arial, sans-serif;
 color: rgba(255, 255, 255, 0.8);
 font-size: 5em;
 }
+
 
 .panel .text {
 color: #999;
@@ -131,4 +149,5 @@ color: #bbb;
 font-size: 13px;
 text-align: center;
 }
+*/
 </style>

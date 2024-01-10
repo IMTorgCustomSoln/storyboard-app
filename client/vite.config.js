@@ -11,7 +11,7 @@ export default defineConfig({
     viteSingleFile()
   ],
   optimizeDeps: {
-    exclude: ['splitpanes']
+    exclude: ['vue-draggable-plus']
   },
   resolve: {
     alias: {
