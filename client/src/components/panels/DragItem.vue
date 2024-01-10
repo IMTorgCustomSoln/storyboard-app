@@ -9,7 +9,11 @@
 
   <!-- Add Content -->
   <div style="margin:10px">
-    <VueDraggable v-model="list" :animation="150" handle=".handle">
+    <VueDraggable 
+      v-model="list" 
+      :animation="150" 
+      handle=".handle"
+      >
       <div v-for="(item, index) in list" :key="item.id">
         <div class="column_container">
           <!--<b-icon-chevron-double-right class="h5 mb-1 destroy" font-scale="0.8" />-->
@@ -29,7 +33,7 @@
               </div>
             </b-col>
             <b-col cols="1">
-              <b-icon-x-square class="cursor-pointer" @click="remove(index)">X</b-icon-x-square>
+              <b-icon-x-square class="cursor-pointer dim" @click="remove(index)">X</b-icon-x-square>
             </b-col>
           </b-row>
         </div>
@@ -39,7 +43,7 @@
     <!-- Add Button -->
     <b-row>
       <b-col style="text-align:center;">
-        <b-icon-plus-lg class="h5 mb-0" style="margin:50px" @click="handleAdd">
+        <b-icon-plus-lg class="h5 mb-0 dim" style="margin:50px" @click="handleAdd">
         </b-icon-plus-lg>
       </b-col>
     </b-row>
@@ -52,11 +56,11 @@
 import { VueDraggable } from 'vue-draggable-plus'
 
 export default {
+  name: 'DragItem',
   compatConfig: {
     //MODE: 3,
-    //COMPONENT_V_MODEL: false
+    COMPONENT_V_MODEL: false
   },
-  name: 'DragItem',
   components: {
     VueDraggable
   },
@@ -118,5 +122,9 @@ export default {
 
 .column_container div[class^="col-"] {
   margin: auto;
+}
+
+.dim {
+  color: #979797;
 }
 </style>

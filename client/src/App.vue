@@ -6,7 +6,7 @@
         <DragItem/>
       </template>
       <template v-slot:image>
-        <!-- content for the header slot -->
+        <ImagePanel/>
       </template>
       <template v-slot:layout>
         <!-- content for the header slot -->
@@ -21,7 +21,9 @@
 import NavbarTop from '@/components/NavbarTop.vue';
 import SplitPane from '@/components/SplitPane.vue';
 import FooterBar from '@/components/FooterBar.vue';
-import DragItem from '@/components/image/DragItem.vue';
+
+import DragItem from '@/components/panels/DragItem.vue';
+import ImagePanel from '@/components/panels/ImagePanel.vue';
 
 export default {
 name: `App`,
@@ -29,7 +31,9 @@ components:{
   NavbarTop,
   SplitPane,
   FooterBar,
-  DragItem
+
+  DragItem,
+  ImagePanel
 },
 data() {
   return {

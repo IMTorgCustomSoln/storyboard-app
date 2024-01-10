@@ -1,13 +1,13 @@
 <template>
   <div class="panel">
     <Splitpanes >
-      <Pane min-size="5">
+      <Pane min-size="5" :size="40">
         <slot name="outline"></slot>
       </Pane>
-      <Pane min-size="5">
+      <Pane min-size="5" :size="ImagePaneSize">
         <slot name="image"></slot>
       </Pane>
-      <Pane min-size="5">
+      <Pane min-size="5" :size="100 - ImagePaneSize">
         <slot name="layout"></slot>
       </Pane>
     </Splitpanes>
@@ -31,9 +31,13 @@ import 'splitpanes/dist/splitpanes.css'
 export default{
     name: 'SplitPane',
     components: { Splitpanes, Pane },
-    compatConfig: { COMPONENT_V_MODEL: false },
+    compatConfig: { 
+      MODE: 3,
+      //COMPONENT_V_MODEL: false 
+    },
     data(){
         return {
+          ImagePaneSize: 95
         }
     },
     methods:{ 
