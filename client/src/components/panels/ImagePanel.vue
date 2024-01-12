@@ -46,7 +46,10 @@
                 <b-col cols="9">
                     <b-tabs content-class="mt-3">
                         <b-tab title="Freehand" active>
+                            <b-container>
                             <p>I'm the first tab</p>
+                            <FreeHand/>
+                            </b-container>
                         </b-tab>
                         <b-tab title="Background">
                             <p>I'm a disabled tab!</p>
@@ -70,6 +73,8 @@
 <script>
 import { VueDraggable } from 'vue-draggable-plus'
 
+import FreeHand from '@/components/image/FreehandImage.vue'
+
 export default {
     name: 'ImagePanel',
     compatConfig: {
@@ -77,7 +82,8 @@ export default {
         COMPONENT_V_MODEL: false
     },
     components: {
-        VueDraggable
+        VueDraggable,
+        FreeHand
     },
     data() {
         return {
