@@ -15,6 +15,7 @@
     "@vue/compat": "^3.4.5",
     "bootstrap": "^5.3.2",
     "bootstrap-vue": "^2.23.1",
+    "gridstack": "^10.0.1",
     "moment-timezone": "^0.5.44",
     "perfect-freehand": "^1.2.0",
     "pinia": "^2.1.7",

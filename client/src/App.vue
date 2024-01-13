@@ -9,7 +9,7 @@
         <ImagePanel/>
       </template>
       <template v-slot:layout>
-        <!-- content for the header slot -->
+        <PageLayout/>
       </template>
     </SplitPane>
     <FooterBar></FooterBar>
@@ -24,6 +24,7 @@ import FooterBar from '@/components/FooterBar.vue';
 
 import DragItem from '@/components/panels/DragItem.vue';
 import ImagePanel from '@/components/panels/ImagePanel.vue';
+import PageLayout from '@/components/layout/PageLayout.vue'
 
 export default {
 name: `App`,
@@ -33,7 +34,8 @@ components:{
   FooterBar,
 
   DragItem,
-  ImagePanel
+  ImagePanel,
+  PageLayout
 },
 data() {
   return {
