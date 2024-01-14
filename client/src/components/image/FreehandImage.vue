@@ -1,5 +1,6 @@
 <template>
     <div id="container">
+        <b-aspect :aspect="aspect"> <!--TODO:fix viewport wrt aspect-->
         <svg id="freehand-canvas" 
             @pointerdown="handlePointerDown" 
             @pointermove="handlePointerMove"
@@ -8,6 +9,7 @@
                 <path />
             </g>
         </svg>
+        </b-aspect>
     </div>
 </template>
 
@@ -17,11 +19,12 @@ import { getStroke } from "perfect-freehand";
 export default {
     name: 'FreehandImage',
     compatConfig: {
-        MODE: 3,
+        //MODE: 3,
         //COMPONENT_V_MODEL: false
     },
     data() {
         return {
+            aspect:'1:1',
             points: [],
             setPoints: null
         }
@@ -92,6 +95,11 @@ function getSvgPathFromStroke(stroke) {
 
 <style scoped>
 
+#container {
+    max-width: 100%;
+    height: auto;
+}
+
 #freehand-canvas {
     /*position: fixed;*/
     border-color: black;
@@ -99,8 +107,8 @@ function getSvgPathFromStroke(stroke) {
 
     top: 0;
     left: 0;
-    width: 100;
-    height: 100;
+    width: 100%;
+    height: 100%;
     background-color: #ffffff;
     touch-action: none;
 }
