@@ -12,7 +12,7 @@
             <b-col cols="8" class="mx-auto">
                 <div>Page-{{id}}</div>
                 <b-card>
-                    <b-aspect :aspect="aspect">
+                    <b-aspect :aspect="aspect.layout">
                         <div v-bind:id="'gs-'+id" class="grid-stack"></div>
                     </b-aspect>
                 </b-card>
@@ -33,42 +33,78 @@ export default{
     },
     data(){
         return{
-            aspect:'8.5:11',
+          aspectOptions:[
+            {name:'default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
+            {name:'ppt', layout: '11:8.5', itemWidth:6, itemHeight: 4},
+          ],
+            aspect:{name:'default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
             pages: [
                 {page: 0, id: 0},
                 {page: 1, id: 1},
-            ]
+            ],
+            gridOptions: {
+              //layout
+              column: 12,
+              row:18,
+              //cellHeight: '100px',
+              //minRow: 1,
+
+              //placement
+              float: true,
+              dragOut: true,
+              acceptWidgets: true,
+
+              //item attrs
+              resizeable: {handles:'all'},
+              sizeToContent: true
+            },
+            grid:[]
         }
     },
     mounted() {
-        const options = {
-            //layout
-            column: 12,
-            row:18,
-            //cellHeight: '100px',
-            //minRow: 1,
+        this.initialize()
+    },
+    methods:{
+      initialize(){
+        const NUMBER_OF_ITEMS = 12
+        const items = Array.apply(null, Array( NUMBER_OF_ITEMS )).map(function (x, i) { return {id:i} })
 
-            //placement
-            float: true,
-            dragOut: true,
-            acceptWidgets: true,
+        const ITEMS_PER_PAGE = 9
+        const NUMBER_OF_PAGES = Math.floor( items.length / ITEMS_PER_PAGE ) + 1
+        this.pages = Array.apply(null, Array( NUMBER_OF_PAGES )).map(function (x, i) { return {id:i, page:i} })
+        
+        items.forEach((item, index) => {
+          const pageIndex = Math.floor(index / ITEMS_PER_PAGE)
+          const itemsOnPageIndex = index - (pageIndex * ITEMS_PER_PAGE)
+          console.log(itemsOnPageIndex)
 
-            //item attrs
-            resizeable: {handles:'all'},
-            sizeToContent: true
+          const itemsPerRow = this.gridOptions.column / this.aspect.itemWidth;
+          const colIndex = itemsOnPageIndex % itemsPerRow  
+          const rowIndex = Math.floor(itemsOnPageIndex / itemsPerRow)
+
+          item.x = colIndex * this.aspect.itemWidth;
+          item.y = rowIndex * itemsOnPageIndex
+          item.w = this.aspect.itemWidth;
+          item.h = this.aspect.itemHeight;
+
+          item.content = '<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />' //, locked:true, content:"locked"},
+        })
+
+        for(const [idx, page] of this.pages.entries()){
+          const itemIndex = (ITEMS_PER_PAGE) * idx
+          const selectedItems = items.slice(itemIndex, (itemIndex + ITEMS_PER_PAGE)  )
+          console.log(selectedItems)
+          const pageGrid = GridStack.init(
+            this.gridOptions, 
+            document.getElementById(`gs-${page.id}`)
+            ).load(selectedItems)
+          this.grid.push(pageGrid)
         }
-        const items = [
-            {content: 'my first widget'}, // will default to location (0,0) and 1x1
-            {w: 2, content: 'another longer widget!'}, // will be placed next at (1,0) and 2x1
-            {x: 1, y: 1, content: '<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />'}, //, locked:true, content:"locked"},
-            {x: 2, y: 2, w: 3},
-            {x: 4, y: 2},
-            {x: 3, y: 1, h: 2},
-            {x: 0, y: 6, w: 2, h: 2}
-          ]
-        for(const page of this.pages){
-            GridStack.init(options, document.getElementById(`gs-${page.id}`)).load(items)
-        }
+      },
+      saveFullGrid(){
+        return true
+      }
+
     }
 }
 

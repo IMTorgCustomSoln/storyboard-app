@@ -12,7 +12,7 @@
         <PageLayout/>
       </template>
     </SplitPane>
-    <FooterBar></FooterBar>
+    <FooterBar class="footer"></FooterBar>
   </div>
 </template>
 
@@ -53,12 +53,12 @@ methods:{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
-     font-family: Avenir, Helvetica, Arial, sans-serif;
+    /*min-height: 100vh;*/
+    font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .content {
-    /*  */
+  .footer {
+    min-height: 100vh;
   }
 </style>
