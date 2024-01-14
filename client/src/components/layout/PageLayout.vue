@@ -6,18 +6,59 @@
         </b-col>
     </b-row>
 
+    <!--Add Navbar-->
+    <b-row>
+      <b-col>
+        <b-navbar type="dark" variant="dark">
+          <b-navbar-nav >
+          <b-button 
+              size="sm" 
+              class="my-2 my-sm-0" 
+              variant="outline-light" 
+              style="margin-left:5px"
+              type="button"
+              @click="saveGrid"
+              >Save
+            </b-button>
+            <b-nav-item-dropdown text="Choose layout" right>
+              <div v-for="option in aspectOptions" :key="option.id">
+                <b-dropdown-item @click="selectLayout(option.name)">
+                  {{ option.name }} - ({{ option.layout }})
+                </b-dropdown-item>
+              </div>
+
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-navbar>
+      </b-col>
+    </b-row>
+
     <!-- Add Content -->
-    <div v-for="(page, id) in pages" :key="id">
+    <div class="container">
+      <div class="container-content">
+        <div v-bind="currentGridName">{{ currentGridName }}</div>
         <b-row>
-            <b-col cols="8" class="mx-auto">
-                <div>Page-{{id}}</div>
-                <b-card>
-                    <b-aspect :aspect="aspect.layout">
-                        <div v-bind:id="'gs-'+id" class="grid-stack"></div>
-                    </b-aspect>
-                </b-card>
-            </b-col>
+          <b-col cols="2" style="margin:5px">
+            <b-form-input
+              placeholder="Layout name"
+              v-model="currentGrid.name"
+              @input="event => this.currentGrid.name = event.target.value"
+              ></b-form-input>
+          </b-col>
         </b-row>
+        <div v-for="(page, id) in pages" :key="id">
+            <b-row>
+                <b-col cols="8" class="mx-auto">
+                    <div>Page-{{id}}</div>
+                    <b-card>
+                        <b-aspect :aspect="selectedAspect.layout">
+                            <div v-bind:id="'gs-'+id" class="grid-stack"></div>
+                        </b-aspect>
+                    </b-card>
+                </b-col>
+            </b-row>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -33,16 +74,21 @@ export default{
     },
     data(){
         return{
+          savedGrids: [],    //TODO:save to store
+          currentGrid: [],
+          currentGridName: null,   //TODO:fix workflow
+
           aspectOptions:[
-            {name:'default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
-            {name:'ppt', layout: '11:8.5', itemWidth:6, itemHeight: 4},
+            {id:0, name:'template: default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
+            {id:1, name:'template: ppt', layout: '11:8.5', itemWidth:6, itemHeight: 4},
           ],
-            aspect:{name:'default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
-            pages: [
+          selectedAspect:{name:'default', layout: '8.5:11', itemWidth:4, itemHeight: 6},
+          pages: [
                 {page: 0, id: 0},
                 {page: 1, id: 1},
             ],
-            gridOptions: {
+
+          gridOptions: {
               //layout
               column: 12,
               row:18,
@@ -57,8 +103,7 @@ export default{
               //item attrs
               resizeable: {handles:'all'},
               sizeToContent: true
-            },
-            grid:[]
+            }
         }
     },
     mounted() {
@@ -76,16 +121,15 @@ export default{
         items.forEach((item, index) => {
           const pageIndex = Math.floor(index / ITEMS_PER_PAGE)
           const itemsOnPageIndex = index - (pageIndex * ITEMS_PER_PAGE)
-          console.log(itemsOnPageIndex)
 
-          const itemsPerRow = this.gridOptions.column / this.aspect.itemWidth;
+          const itemsPerRow = this.gridOptions.column / this.selectedAspect.itemWidth;
           const colIndex = itemsOnPageIndex % itemsPerRow  
           const rowIndex = Math.floor(itemsOnPageIndex / itemsPerRow)
 
-          item.x = colIndex * this.aspect.itemWidth;
+          item.x = colIndex * this.selectedAspect.itemWidth;
           item.y = rowIndex * itemsOnPageIndex
-          item.w = this.aspect.itemWidth;
-          item.h = this.aspect.itemHeight;
+          item.w = this.selectedAspect.itemWidth;
+          item.h = this.selectedAspect.itemHeight;
 
           item.content = '<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />' //, locked:true, content:"locked"},
         })
@@ -93,16 +137,35 @@ export default{
         for(const [idx, page] of this.pages.entries()){
           const itemIndex = (ITEMS_PER_PAGE) * idx
           const selectedItems = items.slice(itemIndex, (itemIndex + ITEMS_PER_PAGE)  )
-          console.log(selectedItems)
           const pageGrid = GridStack.init(
             this.gridOptions, 
             document.getElementById(`gs-${page.id}`)
             ).load(selectedItems)
-          this.grid.push(pageGrid)
+          this.currentGrid.push(pageGrid)
         }
       },
-      saveFullGrid(){
-        return true
+      selectLayout(layout){
+        this.selectedAspect = layout
+      },
+      saveGrid(){
+        const serializedGrids = []
+        for(const grid of this.currentGrid){
+          const serializedFull = grid.save(true, true);
+          //const serializedData = serializedFull.children;
+          serializedGrids.push( JSON.stringify(serializedFull, null, '  ') )
+        }
+        this.savedGrids[this.selectedAspect.name] = serializedGrids
+        console.log(this.savedGrids)
+      },
+      loadFullGrid() {
+        /* 3.1 full method to reload from scratch - delete the grid and add it back from JSON
+        if (!serializedFull) return;
+        grid.destroy(true); // nuke everything
+        grid = GridStack.addGrid(document.querySelector('#gridCont'), serializedFull)
+        */
+      },
+      clearGrid() {
+        this.currentGrid.removeAll();
       }
 
     }
@@ -225,8 +288,16 @@ function addEvents(grid, id) {
 </script>
 
 <style type="text/css">
-  .grid-stack { background: white; }
-  .grid-stack-item-content { background-color: rgb(231, 231, 231); }
+.container{
+  height: 1000px;      /*TODO: scrolling is good, but must make the container the height of the screen*/
+}
+.container-content{
+  height: 1000px;
+  overflow:auto;
+}
+
+.grid-stack { background: white; }
+.grid-stack-item-content { background-color: rgb(231, 231, 231); }
 
 img {
     max-width: 100%;

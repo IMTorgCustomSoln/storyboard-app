@@ -12,7 +12,7 @@
         <PageLayout/>
       </template>
     </SplitPane>
-    <FooterBar class="footer"></FooterBar>
+    <!--<FooterBar class="footer"></FooterBar>-->
   </div>
 </template>
 
@@ -53,12 +53,13 @@ methods:{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /*min-height: 100vh;*/
+    height: 100vh;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .footer {
-    min-height: 100vh;
+
+  .NOT_USED_footer {
+    min-height: 100vh;  /*TODO:fix to bottom */
   }
 </style>
