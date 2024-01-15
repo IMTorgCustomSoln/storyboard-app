@@ -1,11 +1,4 @@
 <template>
-    <!-- Add Header -->
-    <b-row>
-        <b-col style="text-align:center;">
-            <h1>Image</h1>
-        </b-col>
-    </b-row>
-
 
     <!-- Add Content -->
     <div>

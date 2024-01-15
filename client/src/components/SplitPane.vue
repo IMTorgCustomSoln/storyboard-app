@@ -1,14 +1,27 @@
 <template>
   <div class="panel">
-    <Splitpanes class="default-theme" :push-other-panes="false">
+    <Splitpanes 
+      class="default-theme" 
+      :push-other-panes="true"
+      @resize="showPanels('resize', $event)"
+      >
       <Pane min-size="5" :size="40">
-        <slot name="outline"></slot>
+        <h1 :style="textPanel1">Outline</h1>
+        <div v-show="showPanel1">
+          <slot name="outline"></slot>
+        </div>
       </Pane>
       <Pane min-size="5" :size="ImagePaneSize">
-        <slot name="image"></slot>
+        <h1 :style="textPanel2">Image</h1>
+        <div v-show="showPanel2">
+          <slot name="image"></slot>
+        </div>
       </Pane>
       <Pane min-size="5" :size="100 - ImagePaneSize">
-        <slot name="layout"></slot>
+        <h1 :style="textPanel3">Layout</h1>
+        <div v-show="showPanel3">
+          <slot name="layout"></slot>
+        </div>
       </Pane>
     </Splitpanes>
   </div>
@@ -37,10 +50,47 @@ export default{
     },
     data(){
         return {
-          ImagePaneSize: 50
+          ImagePaneSize: 50,
+
+          showPanel1: true,
+          showPanel2: true,
+          showPanel3: true,
+
+          turn: 0.25,
+          textPanel1: '',
+          textPanel2: '',
+          textPanel3: '',
         }
     },
-    methods:{ 
+    computed: {
+     rotateText(){
+        return { transform: 'rotate(' + this.turn + 'turn)'}
+     }
+    },
+    methods:{
+      showPanels(type, panels){
+        if(panels[0].size < 15){
+          this.showPanel1 = false
+          this.textPanel1 = this.rotateText
+        }else{
+          this.showPanel1 = true
+          this.textPanel1 = ''
+        }
+        if(panels[1].size < 20){
+          this.showPanel2 = false
+          this.textPanel2 = this.rotateText
+        }else{
+          this.showPanel2 = true
+          this.textPanel2 = ''
+        }
+        if(panels[2].size < 15){
+          this.showPanel3 = false
+          this.textPanel3 = this.rotateText
+        }else{
+          this.showPanel3 = true
+          this.textPanel3 = ''
+        }
+      } 
     }
 
 }
@@ -48,6 +98,12 @@ export default{
 </script>
 
 <style scoped>
+
+h1 {
+  margin: 20px;
+}
+
+
 
 .panel {
     height: 100%;

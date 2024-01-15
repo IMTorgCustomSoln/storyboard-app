@@ -1,10 +1,4 @@
 <template>
-    <!-- Add Header -->
-    <b-row>
-        <b-col style="text-align:center;">
-            <h1>Layout</h1>
-        </b-col>
-    </b-row>
 
     <!--Add Navbar-->
     <b-row>
