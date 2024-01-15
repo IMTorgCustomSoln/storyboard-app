@@ -27,9 +27,15 @@
             </b-col>
             <b-col cols="3">
               <div style="width:100px; vertical-align: text-top;">
-                <img src="" onerror="this.src='/src/components/icons/placeholder.png';"
+                <img :src="item.imgSrc" onerror="this.src='/src/components/icons/placeholder.png';"
                   style="height:80px; margin:auto" />
-                <b-icon-box-arrow-up-right style="position: absolute"></b-icon-box-arrow-up-right>
+                <b-icon-box-arrow-up-right 
+                  @click="openImageInPanel(item)"
+                  v-b-hover="hoverHandler"
+                  
+                  style="position: absolute"
+                  ><!-- TODO:  :class="brighten: isHovered(location.id)"   -->
+                </b-icon-box-arrow-up-right>
               </div>
             </b-col>
             <b-col cols="1">
@@ -69,24 +75,37 @@ export default {
       list: [
         {
           name: 'Joao',
-          id: '1'
+          id: '1',
+          imgSrc: '',
+          brighten: false,
         },
         {
           name: 'Jean',
-          id: '2'
+          id: '2',
+          imgSrc: '',
+          brighten: false,
         },
         {
           name: 'Johanna',
-          id: '3'
+          id: '3',
+          imgSrc: '',
+          brighten: false,
         },
         {
           name: 'Juan',
-          id: '4'
+          id: '4',
+          imgSrc: '',
+          brighten: false,
         }
       ]
     }
   },
   methods: {
+    hoverHandler(isHovered){
+      if(isHovered){
+        this.brighten = true
+      }
+    },
     handleAdd() {
       const length = this.list.length + 1
       this.list.push({
@@ -94,13 +113,16 @@ export default {
         id: `${length}`
       })
     },
-
     remove(index) {
       this.list.splice(index, 1)
+    },
+    openImageInPanel(item){
+      //TODO:send to image panel
+      console.log(item)
+      const ImagePaneSize = 90
+      const selectedItem = item
     }
-
   }
-
 }
 </script>
 
@@ -122,6 +144,10 @@ export default {
 
 .column_container div[class^="col-"] {
   margin: auto;
+}
+
+.bright {
+  fill: blue;
 }
 
 .dim {

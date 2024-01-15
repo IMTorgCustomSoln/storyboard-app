@@ -9,13 +9,11 @@
     <!--Add Navbar-->
     <b-row>
       <b-col>
-        <b-navbar type="dark" variant="dark">
-          <b-navbar-nav >
+        <b-navbar type="light" variant="">
+          <b-navbar-nav>
           <b-button 
               size="sm" 
-              class="my-2 my-sm-0" 
-              variant="outline-light" 
-              style="margin-left:5px"
+              style="margin:5px"
               type="button"
               @click="saveGrid"
               >Save
@@ -287,7 +285,10 @@ function addEvents(grid, id) {
 
 </script>
 
-<style type="text/css">
+
+<style >
+/*TODO: this should be `scoped`*/
+
 .container{
   height: 1000px;      /*TODO: scrolling is good, but must make the container the height of the screen*/
 }
@@ -302,6 +303,10 @@ function addEvents(grid, id) {
 img {
     max-width: 100%;
     height: auto;
+}
+
+.navbar {
+  background-color: rgb(221, 220, 220);
 }
 
 </style>

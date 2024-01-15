@@ -1,6 +1,6 @@
 <template>
   <div class="panel">
-    <Splitpanes >
+    <Splitpanes class="default-theme" :push-other-panes="false">
       <Pane min-size="5" :size="40">
         <slot name="outline"></slot>
       </Pane>
@@ -32,7 +32,7 @@ export default{
     name: 'SplitPane',
     components: { Splitpanes, Pane },
     compatConfig: { 
-      MODE: 3,
+      //MODE: 3,
       //COMPONENT_V_MODEL: false 
     },
     data(){
@@ -71,12 +71,12 @@ export default{
 
 
 
-/* increase for touchscreen */
+/* increase for touchscreen 
+TODO:this fails - why!!!
+ref: https://github.com/antoniandre/splitpanes/issues/63
+*/
 
-.splitpanes__splitter {
-  background-color: #ccc;
-  position: relative;
-}
+.splitpanes__splitter {background-color: #ccc;position: relative;}
 .splitpanes__splitter:before {
   content: '';
   position: absolute;
@@ -87,16 +87,10 @@ export default{
   opacity: 0;
   z-index: 1;
 }
-.splitpanes__splitter:hover:before {
-  /*opacity: 1;*/
-  background-color: rgba(255, 0, 0, 0.3);
-}
-.splitpanes--vertical > .splitpanes__splitter:before {
-  left: -30px;right: -30px;height: 100%;
-}
-.splitpanes--horizontal > .splitpanes__splitter:before {
-  top: -30px;bottom: -30px;width: 100%;
-}
+.splitpanes__splitter:hover:before {opacity: 1;}
+.splitpanes--vertical > .splitpanes__splitter:before {left: -30px;right: -30px;height: 100%;}
+.splitpanes--horizontal > .splitpanes__splitter:before {top: -30px;bottom: -30px;width: 100%;}
+
 
 
 

@@ -2,7 +2,17 @@
     <div id="container">
         <b-row>
             <b-col>
-                <b-button @click="saveSvg" size="sm" style="margin:5px;">Save</b-button>
+                <b-navbar type="light" variant="">
+                    <b-navbar-nav>
+                        <b-button 
+                            @click="saveSvg" 
+                            size="sm" 
+                            style="margin:5px;"
+                            >
+                            Save
+                        </b-button>
+                    </b-navbar-nav>
+                </b-navbar>
             </b-col>
         </b-row>
         <b-aspect :aspect="aspect">
@@ -153,5 +163,8 @@ function getSvgPathFromStroke(stroke) {
 
 }
 
+.navbar {
+  background-color: rgb(221, 220, 220);
+}
 
 </style>

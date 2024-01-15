@@ -20,7 +20,7 @@
 //import {useDisplayStore} from '@/main.js';
 import NavbarTop from '@/components/NavbarTop.vue';
 import SplitPane from '@/components/SplitPane.vue';
-import FooterBar from '@/components/FooterBar.vue';
+//import FooterBar from '@/components/FooterBar.vue';
 
 import DragItem from '@/components/panels/DragItem.vue';
 import ImagePanel from '@/components/panels/ImagePanel.vue';
@@ -31,7 +31,7 @@ name: `App`,
 components:{
   NavbarTop,
   SplitPane,
-  FooterBar,
+  //FooterBar,
 
   DragItem,
   ImagePanel,
