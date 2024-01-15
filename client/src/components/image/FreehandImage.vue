@@ -1,10 +1,19 @@
 <template>
     <div id="container">
-        <b-aspect :aspect="aspect"> <!--TODO:fix viewport wrt aspect-->
+        <b-aspect :aspect="aspect">
         <svg id="freehand-canvas" 
             @pointerdown="handlePointerDown" 
             @pointermove="handlePointerMove"
-            >
+            
+            viewBox="0 0 1000 1000"
+            aspect-ratio="XminYmin"
+            ><!-- Notes
+                using viewBox must be done correctly using the following references:
+                    * viewBox explanation: https://stackoverflow.com/questions/19484707/how-can-i-make-an-svg-scale-with-its-parent-container
+                    * event.clientX explanation: https://stackoverflow.com/questions/11715966/change-in-mouse-position-when-viewbox-is-added
+                    * SVGGraphicsElement: https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement
+                    * DOMPoint: https://developer.mozilla.org/en-US/docs/Web/API/DOMPointReadOnly
+            -->
             <g id="layer-1">
                 <path />
             </g>
@@ -31,13 +40,25 @@ export default {
     },
     methods: {
         handlePointerDown(e) {
-            const point = [e.offsetX, e.offsetY, e.pressure]
+            //const point = [e.offsetX, e.offsetY, e.pressure]
+            const svg = document.querySelector("#freehand-canvas");
+            var m = svg.getScreenCTM();
+            var p = new DOMPointReadOnly(e.clientX, e.clientY)
+            p = p.matrixTransform(m.inverse());
+
+            const point = [p.x, p.y, e.pressure]
             this.points = [point]
             this.render()
         },
         handlePointerMove(e) {
             if (e.buttons === 1) {
-			    this.points = [...this.points, [e.offsetX, e.offsetY, e.pressure]];
+			    //this.points = [...this.points, [e.offsetX, e.offsetY, e.pressure]];
+                const svg = document.querySelector("#freehand-canvas");
+                var m = svg.getScreenCTM();
+                var p = new DOMPointReadOnly(e.clientX, e.clientY)
+                p = p.matrixTransform(m.inverse());
+
+                this.points = [...this.points, [p.x, p.y, e.pressure]];
 			    this.render();
 		    }
         },
@@ -96,8 +117,8 @@ function getSvgPathFromStroke(stroke) {
 <style scoped>
 
 #container {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    /*height: 1000px;*/
 }
 
 #freehand-canvas {
@@ -105,12 +126,14 @@ function getSvgPathFromStroke(stroke) {
     border-color: black;
     border-style: solid;
 
+    /*
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: #ffffff;
     touch-action: none;
+    */
 }
 
 #freehand-canvas path{

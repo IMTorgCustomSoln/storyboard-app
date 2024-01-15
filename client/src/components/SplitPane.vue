@@ -37,7 +37,7 @@ export default{
     },
     data(){
         return {
-          ImagePaneSize: 90
+          ImagePaneSize: 50
         }
     },
     methods:{ 
