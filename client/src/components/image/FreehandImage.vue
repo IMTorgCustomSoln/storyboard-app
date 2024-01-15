@@ -1,6 +1,12 @@
 <template>
     <div id="container">
+        <b-row>
+            <b-col>
+                <b-button @click="saveSvg" size="sm" style="margin:5px;">Save</b-button>
+            </b-col>
+        </b-row>
         <b-aspect :aspect="aspect">
+            <div>
         <svg id="freehand-canvas" 
             @pointerdown="handlePointerDown" 
             @pointermove="handlePointerMove"
@@ -18,6 +24,7 @@
                 <path />
             </g>
         </svg>
+            </div>
         </b-aspect>
     </div>
 </template>
@@ -72,6 +79,10 @@ export default {
                 )
             );
             layer.appendChild(newpath)
+        },
+        saveSvg(){
+            const serializedSvg = document.querySelector("#freehand-canvas").parentElement.getInnerHTML()
+            this.$emit('saved', serializedSvg)
         }
     }
 }

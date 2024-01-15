@@ -13,6 +13,7 @@
             <b-row>
                 <b-col cols="3" style="padding-top:60px;">
                     <h5>Layers</h5>
+                    <p>Check a single layer where the image should be saved.</p>
                     <VueDraggable 
                         ref="el"
                         v-model="layers" 
@@ -21,10 +22,30 @@
                         @start="onStart"
                         @update="onUpdate"
                         >
+                        <b-form-checkbox-group
+                            id="checkbox-group"
+                            v-model="selectedLayer"
+                            :aria-describedby="ariaDescribedby"
+                            name="selected-layer"
+                          >
                         <div v-for="(item, index) in layers" :key="item.id">
                             <div class="column_container">
                                 <b-row>
-                                    <b-col cols="10">
+                                    <b-col cols="2">
+                                        <b-form-checkbox
+                                          name="selected-layer"
+                                          :value=item.id
+                                          :disabled="isDisabledLayer(item)"
+                                          ><!--
+                                            TODO:an error occurs, but why: Uncaught TypeError: assign is not a function at HTMLInputElement.<anonymous>
+                                                ref: https://github.com/bootstrap-vue/bootstrap-vue/discussions/6407
+                                          v-model="item.selected"
+                                          value="true"
+                                          unchecked-value="false"
+                                        >-->
+                                        </b-form-checkbox>
+                                    </b-col>
+                                    <b-col cols="8">
                                         <input type="text" v-model="item.name" class="layer" style="width:100px;" />
                                     </b-col>
                                     <b-col cols="2">
@@ -34,6 +55,7 @@
                                 </b-row>
                             </div>
                         </div>
+                        </b-form-checkbox-group>
                     </VueDraggable>
                     <!-- Add Button -->
                     <b-row>
@@ -47,21 +69,21 @@
                     <b-tabs content-class="mt-3">
                         <b-tab title="Freehand" active>
                             <b-container>
-                            <p>I'm the first tab</p>
-                            <FreeHand/>
+                            <p>Sketch anything by freehand.</p>
+                            <FreeHand @saved="onChildSaved"/>
                             </b-container>
                         </b-tab>
                         <b-tab title="Background">
-                            <p>I'm a disabled tab!</p>
+                            <p>Create backgrounds for your scene.</p>
                         </b-tab>
                         <b-tab title="Subject">
-                            <p>I'm the second tab</p>
+                            <p>Design the pose and looks for primary characters.</p>
                         </b-tab>
                         <b-tab title="Foreground">
-                            <p>I'm a disabled tab!</p>
+                            <p>This can include any additional objects.</p>
                         </b-tab>
                         <b-tab title="Frame">
-                            <p>I'm a disabled tab!</p>
+                            <p>Shape and size the view portal to your image.</p>
                         </b-tab>
                     </b-tabs>
                 </b-col>
@@ -87,21 +109,37 @@ export default {
     },
     data() {
         return {
+            selectedLayer: [],
             layers: [
-                { name: 'layer-1', id: 0 }
+                { name: 'layer-1', id: 0, image: null}
             ]
         }
     },
     methods: {
+        isDisabledLayer(item){
+            //const {selectedLayer} = this
+            return this.selectedLayer.length === 1 && !(this.selectedLayer[0] === item.id)
+        },
         layerAdd() {
-            const length = this.layers.length + 1
+            const length = this.layers.length
             this.layers.push({
-                name: `layer-${length}`,
-                id: `${length}`
+                name: `layer-${length+1}`,
+                id: `${length}`,
+                image: null
             })
         },
         remove(index) {
             this.layers.splice(index, 1)
+        },
+        onChildSaved(image){
+            //Save image that comes from child tab
+            console.log(image)
+            const layerToSaveImage = this.selectedLayer[0]
+            this.layers.forEach(layer => {
+                if(layer.id==layerToSaveImage){
+                    layer.image = image
+                }
+            })
         }
 
     }
