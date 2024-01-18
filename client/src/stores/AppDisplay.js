@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { toRaw } from 'vue'
 
 
 export const useAppDisplay = defineStore('display',{
@@ -13,9 +14,9 @@ export const useAppDisplay = defineStore('display',{
                     layout: 50
                 },
                 currentSize:{
-                    outline: null,
-                    image: null,
-                    layout: null
+                    outline: 40,
+                    image: 50,
+                    layout: 50
                 },
             }
         }
@@ -24,7 +25,64 @@ export const useAppDisplay = defineStore('display',{
         getSplitPanesDefaultSize(){
             return this.splitPanes.defaultSize
         },
+        getSplitPanesCurrentSize(){
+            return this.splitPanes.currentSize
+        }
     },
     actions:{
+        initializeSplitPanes(){
+            const defaults = toRaw(this.getSplitPanesDefaultSize)
+            this.$patch({
+                splitPanes:{
+                    currentSize:{
+                        outline: defaults.outline,
+                        image: defaults.image,
+                        layout: defaults.layout
+                    }
+                }
+            })
+        },
+        expandPane(paneName){
+            const MaxSize = 200
+            const ExpandRules = {
+              Outline:()=>{
+                this.$patch({
+                    splitPanes:{
+                        currentSize:{
+                            outline: MaxSize,
+                            image: 15,
+                            layout: 15
+                        }
+                    }
+                })
+
+              },
+              Image:()=>{
+                this.$patch({
+                    splitPanes:{
+                        currentSize:{
+                            outline: 15,
+                            image: MaxSize,
+                            layout: 15
+                        }
+                    }
+                })
+
+              }, 
+              Layout:()=>{
+                this.$patch({
+                    splitPanes:{
+                        currentSize:{
+                            outline: 15,
+                            image:15,
+                            layout:  MaxSize
+                        }
+                    }
+                })
+
+              }, 
+            }
+            ExpandRules[paneName]()
+        }
     }
 })
