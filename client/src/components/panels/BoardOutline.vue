@@ -55,7 +55,7 @@
 import { VueDraggable } from 'vue-draggable-plus'
 
 export default {
-  name: 'DragItem',
+  name: 'BoardOutline',
   compatConfig: {
     //MODE: 3,
     COMPONENT_V_MODEL: false

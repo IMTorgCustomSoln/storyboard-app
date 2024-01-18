@@ -91,7 +91,7 @@ import { VueDraggable } from 'vue-draggable-plus'
 import FreeHand from '@/components/image/FreehandImage.vue'
 
 export default {
-    name: 'ImagePanel',
+    name: 'ImageEditor',
     compatConfig: {
         //MODE: 3,
         COMPONENT_V_MODEL: false

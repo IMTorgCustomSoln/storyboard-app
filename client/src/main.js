@@ -3,7 +3,7 @@ import './assets/main.css'
 //import { createApp } from 'vue'
 import Vue, { createApp } from '@vue/compat';
 import {BootstrapVue, BIcon, BootstrapVueIcons} from 'bootstrap-vue';
-import { createPinia } from 'pinia'
+import {pinia} from '@/stores/config_stores'
 import App from '@/App.vue'
 
 //style
@@ -16,7 +16,6 @@ Vue.component('b-icon', BIcon)
 
 
 const app = createApp(App)
-
-app.use(createPinia())
+app.use(pinia)
 
 app.mount('#app')

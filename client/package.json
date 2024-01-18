@@ -19,6 +19,7 @@
     "moment-timezone": "^0.5.44",
     "perfect-freehand": "^1.2.0",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "splitpanes": "^2.4.1",
     "vite-plugin-singlefile": "^0.13.5",
     "vue": "^3.4.5",

@@ -3,10 +3,10 @@
     <NavbarTop/>
     <SplitPane>
       <template v-slot:outline>
-        <DragItem/>
+        <BoardOutline/>
       </template>
       <template v-slot:image>
-        <ImagePanel/>
+        <ImageEditor/>
       </template>
       <template v-slot:layout>
         <PageLayout/>
@@ -22,8 +22,8 @@ import NavbarTop from '@/components/NavbarTop.vue';
 import SplitPane from '@/components/SplitPane.vue';
 //import FooterBar from '@/components/FooterBar.vue';
 
-import DragItem from '@/components/panels/DragItem.vue';
-import ImagePanel from '@/components/panels/ImagePanel.vue';
+import BoardOutline from '@/components/panels/BoardOutline.vue';
+import ImageEditor from '@/components/panels/ImageEditor.vue';
 import PageLayout from '@/components/layout/PageLayout.vue'
 
 export default {
@@ -33,8 +33,8 @@ components:{
   SplitPane,
   //FooterBar,
 
-  DragItem,
-  ImagePanel,
+  BoardOutline,
+  ImageEditor,
   PageLayout
 },
 data() {
