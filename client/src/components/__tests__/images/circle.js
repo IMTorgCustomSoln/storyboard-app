@@ -1,0 +1,1 @@
+export const stringSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="500" cy="500" r="50" /></svg>`

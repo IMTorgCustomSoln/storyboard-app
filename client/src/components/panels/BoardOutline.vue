@@ -1,13 +1,16 @@
 <template>
 
   <!-- Add Content -->
+  <div v-if="isDataLoaded">
+
   <div style="margin:10px">
     <VueDraggable 
-      v-model="list" 
+      v-model="boards" 
       :animation="150" 
       handle=".handle"
       >
-      <div v-for="(item, index) in list" :key="item.id">
+      
+      <div v-for="(board, index) in boards" :key="board.id">
         <div class="column_container">
           <!--<b-icon-chevron-double-right class="h5 mb-1 destroy" font-scale="0.8" />-->
           <b-row>
@@ -15,15 +18,19 @@
               <b-icon-list class="handle cursor-move"></b-icon-list>
             </b-col>
             <b-col cols="7">
-              <b-form-textarea id="textarea-rows" placeholder="Tall textarea" v-model="item.name"
+              <b-form-textarea id="textarea-rows" placeholder="Type description" v-model="board.description"
                 rows="3"></b-form-textarea>
             </b-col>
             <b-col cols="3">
               <div style="width:100px; vertical-align: text-top;">
-                <img :src="item.imgSrc" onerror="this.src='/src/components/icons/placeholder.png';"
-                  style="height:80px; margin:auto" />
+                <div v-if="board.image">
+                <span v-html="board.image"></span>
+                </div>
+                <div v-else>
+                  <img :src="this.src='/src/components/icons/placeholder.png'" style="height:80px; margin:auto" />
+                </div>
                 <b-icon-box-arrow-up-right 
-                  @click="openImageInPanel(item)"
+                  @click="openImageInPanel(board)"
                   v-b-hover="hoverHandler"
                   
                   style="position: absolute"
@@ -37,22 +44,29 @@
           </b-row>
         </div>
       </div>
+    
     </VueDraggable>
 
     <!-- Add Button -->
     <b-row>
       <b-col style="text-align:center;">
-        <b-icon-plus-lg class="h5 mb-0 dim" style="margin:50px" @click="handleAdd">
+        <b-icon-plus-lg class="h5 mb-0 dim" style="margin:50px" @click="addBoard">
         </b-icon-plus-lg>
       </b-col>
     </b-row>
 
-    <preview-list :list="list" />
+    <preview-list :list="boards" />
   </div>
+
+</div>
 </template>
 
 <script>
 import { VueDraggable } from 'vue-draggable-plus'
+
+import { useAppDisplay } from '@/stores/AppDisplay'
+import { useStoryContent} from '@/stores/StoryContent'
+
 
 export default {
   name: 'BoardOutline',
@@ -65,55 +79,55 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          name: 'Joao',
-          id: '1',
-          imgSrc: '',
-          brighten: false,
-        },
-        {
-          name: 'Jean',
-          id: '2',
-          imgSrc: '',
-          brighten: false,
-        },
-        {
-          name: 'Johanna',
-          id: '3',
-          imgSrc: '',
-          brighten: false,
-        },
-        {
-          name: 'Juan',
-          id: '4',
-          imgSrc: '',
-          brighten: false,
-        }
-      ]
+      boards: null
+    }
+  },
+  async created(){
+    const story = useStoryContent()
+    story.initializeStoryFromBackend()
+    const boards = await story.getBoards
+
+    boards.map(board => board['_brighten'] = false)
+    this.boards = boards
+  },
+  computed:{
+    isDataLoaded(){
+      if(this.boards && this.boards.constructor === Array){
+        return true
+      }else{
+        return false
+      }
+    },
+    getBoards(){
+      console.log(this.boards)
+      return this.boards
     }
   },
   methods: {
     hoverHandler(isHovered){
+      //TODO:figure this out
       if(isHovered){
         this.brighten = true
       }
     },
-    handleAdd() {
-      const length = this.list.length + 1
-      this.list.push({
-        name: `Juan ${length}`,
-        id: `${length}`
+    addBoard() {
+      //const story = useStoryContent()
+      //story.addBoard()
+      const length = this.boards.length + 1
+      this.boards.push({
+        description: '',
+        image: '',
+        id: `${length}`,
+        _brighten: false
       })
     },
     remove(index) {
-      this.list.splice(index, 1)
+      this.boards.splice(index, 1)
     },
     openImageInPanel(item){
-      //TODO:send to image panel
-      console.log(item)
-      const ImagePaneSize = 90
-      const selectedItem = item
+      const display = useAppDisplay()
+      display.expandPane('Image')
+      display.setSelectedBoardId(item.id)
     }
   }
 }

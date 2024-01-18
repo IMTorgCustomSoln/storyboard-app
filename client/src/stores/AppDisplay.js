@@ -18,7 +18,9 @@ export const useAppDisplay = defineStore('display',{
                     image: 50,
                     layout: 50
                 },
-            }
+            },
+
+            selectedBoardId: null
         }
     },
     getters:{
@@ -27,9 +29,17 @@ export const useAppDisplay = defineStore('display',{
         },
         getSplitPanesCurrentSize(){
             return this.splitPanes.currentSize
+        },
+        getSelectedBoardId(){
+            return this.selectedBoardId
         }
     },
     actions:{
+        setSelectedBoardId(id){
+            this.$patch({
+                selectedBoardId: id
+            })
+        },
         initializeSplitPanes(){
             const defaults = toRaw(this.getSplitPanesDefaultSize)
             this.$patch({

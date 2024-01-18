@@ -60,11 +60,10 @@ export default{
       const display = useAppDisplay()
 
         return {
-          
           paneSize:{
-            outline: display.getSplitPanesCurrentSize.outline,
-            image: display.getSplitPanesCurrentSize.image,
-            layout: display.getSplitPanesCurrentSize.layout
+            outline: display.getSplitPanesDefaultSize.outline,
+            image: display.getSplitPanesDefaultSize.image,
+            layout: display.getSplitPanesDefaultSize.layout
           },
 
           showPanel1: true,
@@ -109,7 +108,6 @@ export default{
           this.showPanel3 = true
           this.textPanel3 = ''
         }
-        console.log(panels)
       },
       expandPane(event){
         const display = useAppDisplay()
