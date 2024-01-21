@@ -8,26 +8,44 @@
     <Splitpanes 
       class="default-theme" 
       :push-other-panes="true"
-      @resize="showPanels('resize', $event)"
+      @resize="showPanes('resize', $event)"
       >
-      <Pane min-size="5" :size="paneSize.outline">
-        <h1 :style="textPanel1" @click="expandPane($event)">Outline</h1>
-        <div v-show="showPanel1">
+      
+      <Pane min-size="5" :size="this.displayStore.getPanes.outline.currentSize">
+        <h1 
+          :style="this.displayStore.getPanes.outline.headerStyle" 
+          @click="expandPane($event)"
+          >Outline
+        </h1>
+        <div v-show="this.displayStore.getPanes.outline.showContent">
           <slot name="outline"></slot>
         </div>
       </Pane>
-      <Pane min-size="5" :size="paneSize.image">
-        <h1 :style="textPanel2" @click="expandPane($event)">Image</h1>
-        <div v-show="showPanel2">
+
+      <Pane min-size="5" :size="this.displayStore.getPanes.image.currentSize">
+        <h1 
+          :style="this.displayStore.getPanes.image.headerStyle" 
+          @click="expandPane($event)"
+          >Image
+        </h1>
+        <div v-show="this.displayStore.getPanes.image.showContent">
           <slot name="image"></slot>
         </div>
       </Pane>
-      <Pane min-size="5" :size="paneSize.layout">
-        <h1 :style="textPanel3" @click="expandPane($event)">Layout</h1>
-        <div v-show="showPanel3">
+
+      <Pane min-size="5" 
+        :size="this.displayStore.getPanes.layout.currentSize">
+        <h1 
+          :style="this.displayStore.getPanes.layout.headerStyle" 
+          @click="expandPane($event)"
+          >Layout
+        </h1>
+        <div v-show="this.displayStore.getPanes.layout.showContent">
           <slot name="layout"></slot>
         </div>
       </Pane>
+    
+
     </Splitpanes>
   </div>
 </template>
@@ -42,6 +60,7 @@ must use the following in `vite.config.js`:
   },
   ...
 */
+import { mapStores } from 'pinia'
 
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -57,9 +76,10 @@ export default{
       //COMPONENT_V_MODEL: false 
     },
     data(){
-      const display = useAppDisplay()
+      //const display = useAppDisplay()
 
         return {
+          /*
           paneSize:{
             outline: display.getSplitPanesDefaultSize.outline,
             image: display.getSplitPanesDefaultSize.image,
@@ -73,72 +93,77 @@ export default{
           turn: 0.25,
           textPanel1: '',
           textPanel2: '',
-          textPanel3: '',
+          textPanel3: '',*/
         }
     },
+
     computed: {
-     rotateText(){
-        return { transform: 'rotate(' + this.turn + 'turn)'}
+      ...mapStores(useAppDisplay),
+      rotateText(){
+        return { transform: 'rotate(' + this.displayStore.splitPanes.rotateText.turn + 'turn)'}
      },
      getLayoutSize(){
-      const display = useAppDisplay()
-      return 100 - display.getSplitPanesCurrentSize.image
+      return 100 - this.displayStore.getPanes.image.currentSize
      }
     },
+
     methods:{
-      showPanels(type, panels){
-        if(panels[0].size <= 15){
-          this.showPanel1 = false
-          this.textPanel1 = this.rotateText
+      showPanes(type, panes){
+        if(panes[0].size <= 15){
+          this.displayStore.setPane('outline', 'showContent', false)
+          this.displayStore.setPane('outline', 'headerStyle', this.rotateText)
         }else{
-          this.showPanel1 = true
-          this.textPanel1 = ''
+          this.displayStore.setPane('outline', 'showContent', true)
+          this.displayStore.setPane('outline', 'headerStyle', '')
         }
-        if(panels[1].size <= 20){
-          this.showPanel2 = false
-          this.textPanel2 = this.rotateText
+        if(panes[1].size <= 20){
+          this.displayStore.setPane('image', 'showContent', false)
+          this.displayStore.setPane('image', 'headerStyle', this.rotateText)
         }else{
-          this.showPanel2 = true
-          this.textPanel2 = ''
+          this.displayStore.setPane('image', 'showContent', true)
+          this.displayStore.setPane('image', 'headerStyle', '')
         }
-        if(panels[2].size <= 15){
-          this.showPanel3 = false
-          this.textPanel3 = this.rotateText
+        if(panes[2].size <= 15){
+          this.displayStore.setPane('layout', 'showContent', false)
+          this.displayStore.setPane('layout', 'headerStyle', this.rotateText)
         }else{
-          this.showPanel3 = true
-          this.textPanel3 = ''
+          this.displayStore.setPane('layout', 'showContent', true)
+          this.displayStore.setPane('layout', 'headerStyle', '')
         }
       },
       expandPane(event){
-        const display = useAppDisplay()
-        const paneName = event.srcElement.innerHTML
+        const paneName = event.srcElement.innerHTML.replaceAll(" ", "")
+        const MaxSize = 200
+        const ExpandRules = {
+              Outline:()=>{
+                this.displayStore.setPane('outline','currentSize', MaxSize)
+                this.displayStore.setPane('image','currentSize', 15)
+                this.displayStore.setPane('layout','currentSize', 15)
+              },
+              Image:()=>{
+                this.displayStore.setPane('outline','currentSize', 15)
+                this.displayStore.setPane('image','currentSize', MaxSize)
+                this.displayStore.setPane('layout','currentSize', 15)
 
-        display.expandPane(paneName)
-        const currentSize = display.getSplitPanesCurrentSize
-        this.paneSize.outline = currentSize.outline
-        this.paneSize.image = currentSize.image
-        this.paneSize.layout = currentSize.layout
-        
-        this.showPanels('resize', [
-          {size: this.paneSize.outline},
-          {size: this.paneSize.image},
-          {size: this.paneSize.layout}
-          ]
-        )
+              }, 
+              Layout:()=>{
+                this.displayStore.setPane('outline','currentSize', 15)
+                this.displayStore.setPane('image','currentSize', 15)
+                this.displayStore.setPane('layout','currentSize', MaxSize)
+              } 
+            }
+        ExpandRules[paneName]()
+        const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
+          {size: item.currentSize}
+        ))
+        this.showPanes('resize', currentSizesByPane)
       },
       resetPanes(){
-        const display = useAppDisplay()
-        display.initializeSplitPanes()
-        this.paneSize.outline = display.getSplitPanesCurrentSize.outline
-        this.paneSize.image = display.getSplitPanesCurrentSize.image
-        this.paneSize.layout = display.getSplitPanesCurrentSize.layout
-        this.showPanels('resize', [
-          {size: this.paneSize.outline},
-          {size: this.paneSize.image},
-          {size: this.paneSize.layout}
-          ]
-        )
-
+        this.displayStore.initializeSplitPanes()
+        const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
+          {size: item.currentSize}
+        ))
+        this.showPanes('resize', currentSizesByPane)
       }
     }
 
