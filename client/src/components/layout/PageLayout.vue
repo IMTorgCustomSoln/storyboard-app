@@ -55,8 +55,11 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
 import {GridStack} from "gridstack"
 import "gridstack/dist/gridstack.min.css"
+
+import {useStoryContent} from '@/stores/StoryContent'
 
 export default{
     name:'PageLayout',
@@ -101,10 +104,14 @@ export default{
     mounted() {
         this.initialize()
     },
+    computed:{
+      ...mapStores(useStoryContent),
+    },
     methods:{
       initialize(){
-        const NUMBER_OF_ITEMS = 12
-        const items = Array.apply(null, Array( NUMBER_OF_ITEMS )).map(function (x, i) { return {id:i} })
+        //const NUMBER_OF_ITEMS = 12
+        //const items = Array.apply(null, Array( NUMBER_OF_ITEMS )).map(function (x, i) { return {id:i} })
+        const items = this.storyStore.getBoards
 
         const ITEMS_PER_PAGE = 9
         const NUMBER_OF_PAGES = Math.floor( items.length / ITEMS_PER_PAGE ) + 1
@@ -123,7 +130,7 @@ export default{
           item.w = this.selectedAspect.itemWidth;
           item.h = this.selectedAspect.itemHeight;
 
-          item.content = '<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />' //, locked:true, content:"locked"},
+          item.content = item.image   //'<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />' //, locked:true, content:"locked"},
         })
 
         for(const [idx, page] of this.pages.entries()){

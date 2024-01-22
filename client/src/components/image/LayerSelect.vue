@@ -95,7 +95,6 @@ export default{
         },
         addLayer() {
             const length = this.displayStore.imageEditor.layers.length
-            console.log(length)
             this.displayStore.imageEditor.layers.push({
                 name: `layer-${length+1}`,
                 id: `${length}`,
