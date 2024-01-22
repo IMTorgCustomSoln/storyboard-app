@@ -20,7 +20,12 @@
                             <div class="column_container">
                                 <b-row>
                                     <b-col cols="2">
-                                        <input type="checkbox" :value="item.id" v-model="this.displayStore.imageEditor.selectedLayer" @change="uniqueCheck">
+                                        <input 
+                                            type="checkbox" 
+                                            :value="item.id" 
+                                            v-model="this.displayStore.imageEditor.selectedLayer" 
+                                            @change="uniqueCheck"
+                                            >
                                         <!--
                                         <b-form-checkbox
                                           name="selected-layer"
@@ -61,6 +66,7 @@
 <script>
 import { mapStores } from 'pinia'
 import { VueDraggable } from 'vue-draggable-plus'
+import { getRandomIdOrHash } from '@/scripts/utils'
 
 import { useAppDisplay } from '@/stores/AppDisplay'
 
@@ -71,10 +77,11 @@ export default{
     },
     data(){
         return{
+            /*
             selectedLayer: [],
             layers: [
                 { name: 'layer-1', id: 0, image: null}
-            ]
+            ]*/
         }
     },
     computed:{
@@ -85,7 +92,7 @@ export default{
         uniqueCheck(e){
             this.displayStore.imageEditor.selectedLayer = []
             if (e.target.checked) {
-                this.displayStore.imageEditor.selectedLayer .push(e.target.value)
+                this.displayStore.imageEditor.selectedLayer.push(e.target.value)
             }
         },
         isDisabledLayer(item){
@@ -94,16 +101,69 @@ export default{
             return this.displayStore.imageEditor.selectedLayer.length === 1 && !(this.displayStore.imageEditor.selectedLayer [0] === item.id)
         },
         addLayer() {
-            const length = this.displayStore.imageEditor.layers.length
+            const code = getRandomIdOrHash(5)
             this.displayStore.imageEditor.layers.push({
-                name: `layer-${length+1}`,
-                id: `${length}`,
+                name: `layer- ${code}`,
+                id: code,
                 image: null
             })
         },
         removeLayer(index) {
             this.displayStore.imageEditor.layers.splice(index, 1)
+            const length = this.displayStore.imageEditor.layers.length
+            if(length < 1){
+                this.addLayer()
+                const id = this.displayStore.imageEditor.layers[0].id
+                const sim_event = {
+                    target:{
+                        checked: true,
+                        value: id
+                    }
+                }
+                this.uniqueCheck(sim_event)
+            }
+            const ids = this.displayStore.imageEditor.layers.map(item => item.id)
+            const selectedItem = this.displayStore.imageEditor.selectedLayer[0]
+            const isCheckedInLayers = ids.indexOf(selectedItem) 
+            if(isCheckedInLayers==-1){
+                this.displayStore.imageEditor.selectedLayer = []
+                this.displayStore.imageEditor.selectedLayer.push(ids[0])
+            }
         },
     }
 }
 </script>
+
+<style scoped>
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
+.column_container {
+    text-align: center;
+    align-items: center;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /*background-color: #e7e7e7;*/
+    border-color: #e7e7e7;
+    border-width: 1px;
+    border-radius: 5px;
+    border-style: solid;
+    font-size: .8em;
+}
+
+.column_container div[class^="col-"] {
+    padding: 0px;
+    margin: auto;
+}
+
+.layer{
+    padding: 0px;
+}
+
+.dim {
+  color: #979797;
+}
+</style>

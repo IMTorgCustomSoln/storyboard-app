@@ -62,4 +62,27 @@ methods:{
   .NOT_USED_footer {
     min-height: 100vh;  /*TODO:fix to bottom */
   }
+
+  #canvas {
+    /*position: fixed;*/
+    border-color: black;
+    border-style: solid;
+    border-width: thin;
+    background-color: #ffffff;
+
+    /*
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    touch-action: none;
+    */
+}
+
+#canvas path{
+    fill: black;
+    stroke: black;
+
+}
 </style>

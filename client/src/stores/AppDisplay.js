@@ -8,7 +8,7 @@ export const useAppDisplay = defineStore('display',{
             selectedBoardId: null,
 
             imageEditor:{
-                selectedLayer: [],
+                selectedLayer: [0],
                 layers: [
                     { name: 'layer-1', id: 0, image: null}
                 ]

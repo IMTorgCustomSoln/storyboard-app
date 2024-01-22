@@ -76,7 +76,7 @@ export default {
 
 </script>
 
-<style >
+<style scoped>
 /*TODO:not scoped so that it works with LayerSelect*/
 
 .ghost {
