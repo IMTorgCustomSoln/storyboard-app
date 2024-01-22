@@ -64,6 +64,9 @@ export const useAppDisplay = defineStore('display',{
             }
         },
         showPanes(type, panes){
+            this.splitPanes.panes.outline.currentSize = panes[0].size
+            this.splitPanes.panes.image.currentSize = panes[1].size
+            this.splitPanes.panes.layout.currentSize = panes[2].size
             if(panes[0].size <= 15){
               this.setPane('outline', 'showContent', false)
               this.setPane('outline', 'headerStyle', this.rotateText)

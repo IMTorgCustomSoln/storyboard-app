@@ -91,6 +91,7 @@ export default{
         const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
           {size: item.currentSize}
         ))
+        //console.log(currentSizesByPane)
         this.displayStore.showPanes('resize', currentSizesByPane)
       }
     }
