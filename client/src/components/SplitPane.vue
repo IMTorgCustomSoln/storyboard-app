@@ -8,13 +8,13 @@
     <Splitpanes 
       class="default-theme" 
       :push-other-panes="true"
-      @resize="showPanes('resize', $event)"
+      @resize="this.displayStore.showPanes('resize', $event)"
       >
       
       <Pane min-size="5" :size="this.displayStore.getPanes.outline.currentSize">
         <h1 
           :style="this.displayStore.getPanes.outline.headerStyle" 
-          @click="expandPane($event)"
+          @click="this.displayStore.expandPane('Outline')"
           >Outline
         </h1>
         <div v-show="this.displayStore.getPanes.outline.showContent">
@@ -25,7 +25,7 @@
       <Pane min-size="5" :size="this.displayStore.getPanes.image.currentSize">
         <h1 
           :style="this.displayStore.getPanes.image.headerStyle" 
-          @click="expandPane($event)"
+          @click="this.displayStore.expandPane('Image')"
           >Image
         </h1>
         <div v-show="this.displayStore.getPanes.image.showContent">
@@ -37,7 +37,7 @@
         :size="this.displayStore.getPanes.layout.currentSize">
         <h1 
           :style="this.displayStore.getPanes.layout.headerStyle" 
-          @click="expandPane($event)"
+          @click="this.displayStore.expandPane('Layout')"
           >Layout
         </h1>
         <div v-show="this.displayStore.getPanes.layout.showContent">
@@ -76,94 +76,22 @@ export default{
       //COMPONENT_V_MODEL: false 
     },
     data(){
-      //const display = useAppDisplay()
-
-        return {
-          /*
-          paneSize:{
-            outline: display.getSplitPanesDefaultSize.outline,
-            image: display.getSplitPanesDefaultSize.image,
-            layout: display.getSplitPanesDefaultSize.layout
-          },
-
-          showPanel1: true,
-          showPanel2: true,
-          showPanel3: true,
-
-          turn: 0.25,
-          textPanel1: '',
-          textPanel2: '',
-          textPanel3: '',*/
-        }
+        return {}
     },
 
     computed: {
       ...mapStores(useAppDisplay),
-      rotateText(){
-        return { transform: 'rotate(' + this.displayStore.splitPanes.rotateText.turn + 'turn)'}
-     },
      getLayoutSize(){
       return 100 - this.displayStore.getPanes.image.currentSize
      }
     },
-
     methods:{
-      showPanes(type, panes){
-        if(panes[0].size <= 15){
-          this.displayStore.setPane('outline', 'showContent', false)
-          this.displayStore.setPane('outline', 'headerStyle', this.rotateText)
-        }else{
-          this.displayStore.setPane('outline', 'showContent', true)
-          this.displayStore.setPane('outline', 'headerStyle', '')
-        }
-        if(panes[1].size <= 20){
-          this.displayStore.setPane('image', 'showContent', false)
-          this.displayStore.setPane('image', 'headerStyle', this.rotateText)
-        }else{
-          this.displayStore.setPane('image', 'showContent', true)
-          this.displayStore.setPane('image', 'headerStyle', '')
-        }
-        if(panes[2].size <= 15){
-          this.displayStore.setPane('layout', 'showContent', false)
-          this.displayStore.setPane('layout', 'headerStyle', this.rotateText)
-        }else{
-          this.displayStore.setPane('layout', 'showContent', true)
-          this.displayStore.setPane('layout', 'headerStyle', '')
-        }
-      },
-      expandPane(event){
-        const paneName = event.srcElement.innerHTML.replaceAll(" ", "")
-        const MaxSize = 200
-        const ExpandRules = {
-              Outline:()=>{
-                this.displayStore.setPane('outline','currentSize', MaxSize)
-                this.displayStore.setPane('image','currentSize', 15)
-                this.displayStore.setPane('layout','currentSize', 15)
-              },
-              Image:()=>{
-                this.displayStore.setPane('outline','currentSize', 15)
-                this.displayStore.setPane('image','currentSize', MaxSize)
-                this.displayStore.setPane('layout','currentSize', 15)
-
-              }, 
-              Layout:()=>{
-                this.displayStore.setPane('outline','currentSize', 15)
-                this.displayStore.setPane('image','currentSize', 15)
-                this.displayStore.setPane('layout','currentSize', MaxSize)
-              } 
-            }
-        ExpandRules[paneName]()
-        const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
-          {size: item.currentSize}
-        ))
-        this.showPanes('resize', currentSizesByPane)
-      },
       resetPanes(){
         this.displayStore.initializeSplitPanes()
         const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
           {size: item.currentSize}
         ))
-        this.showPanes('resize', currentSizesByPane)
+        this.displayStore.showPanes('resize', currentSizesByPane)
       }
     }
 

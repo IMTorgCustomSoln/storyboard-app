@@ -5,12 +5,12 @@
 
   <div style="margin:10px">
     <VueDraggable 
-      v-model="boards" 
+      v-model="this.storyStore.getBoards" 
       :animation="150" 
       handle=".handle"
       >
       
-      <div v-for="(board, index) in boards" :key="board.id">
+      <div v-for="(board, index) in this.storyStore.boards" :key="board.id">
         <div class="column_container">
           <!--<b-icon-chevron-double-right class="h5 mb-1 destroy" font-scale="0.8" />-->
           <b-row>
@@ -39,7 +39,7 @@
               </div>
             </b-col>
             <b-col cols="1">
-              <b-icon-x-square class="cursor-pointer dim" @click="remove(index)">X</b-icon-x-square>
+              <b-icon-x-square class="cursor-pointer dim" @click="this.storyStore.removeBoard(index)">X</b-icon-x-square>
             </b-col>
           </b-row>
         </div>
@@ -50,18 +50,19 @@
     <!-- Add Button -->
     <b-row>
       <b-col style="text-align:center;">
-        <b-icon-plus-lg class="h5 mb-0 dim" style="margin:50px" @click="addBoard">
+        <b-icon-plus-lg class="h5 mb-0 dim" style="margin:50px" @click="this.storyStore.addBoard('','')">
         </b-icon-plus-lg>
       </b-col>
     </b-row>
 
-    <preview-list :list="boards" />
+    <preview-list :list="this.storyStore.boards" />
   </div>
 
 </div>
 </template>
 
 <script>
+import { mapStores } from 'pinia'
 import { VueDraggable } from 'vue-draggable-plus'
 
 import { useAppDisplay } from '@/stores/AppDisplay'
@@ -78,29 +79,21 @@ export default {
     VueDraggable
   },
   data() {
-    return {
-      boards: null
-    }
+    return {}
   },
   async created(){
-    const story = useStoryContent()
-    story.initializeStoryFromBackend()
-    const boards = await story.getBoards
-
-    boards.map(board => board['_brighten'] = false)
-    this.boards = boards
+    this.storyStore.initializeStoryFromBackend()
+    const boards = await this.storyStore.getBoards
+    return boards
   },
   computed:{
+    ...mapStores(useAppDisplay, useStoryContent),
     isDataLoaded(){
-      if(this.boards && this.boards.constructor === Array){
+      if(this.storyStore.boards && this.storyStore.boards.constructor === Array){
         return true
       }else{
         return false
       }
-    },
-    getBoards(){
-      console.log(this.boards)
-      return this.boards
     }
   },
   methods: {
@@ -110,24 +103,9 @@ export default {
         this.brighten = true
       }
     },
-    addBoard() {
-      //const story = useStoryContent()
-      //story.addBoard()
-      const length = this.boards.length + 1
-      this.boards.push({
-        description: '',
-        image: '',
-        id: `${length}`,
-        _brighten: false
-      })
-    },
-    remove(index) {
-      this.boards.splice(index, 1)
-    },
     openImageInPanel(item){
-      const display = useAppDisplay()
-      display.expandPane('Image')
-      display.setSelectedBoardId(item.id)
+      this.displayStore.expandPane('Image')
+      this.displayStore.setSelectedBoardId(item.id)
     }
   }
 }
@@ -141,7 +119,7 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   background-color: #e7e7e7;
-  border-radius: 15px
+  border-radius: 5px
 }
 
 .column_container .row {

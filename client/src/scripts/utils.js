@@ -128,14 +128,18 @@ export function totalTimeBetweenDates(units='days', start, end) {
     //console.log(diffTime + " milliseconds");
     let result = 0
     switch(units){
-      case 'hours':
+      case 'hours':{
         const diffHours = diffTime / (1000 * 60 * 60);
         result = diffHours;
         //console.log(diffDays + " hours");
-      case 'days':
+        /* falls through */
+      }
+      case 'days':{
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
         result = diffDays;
         //console.log(diffDays + " days");
+        /* falls through */
+      }
     }
     const rnd = Math.round((result + Number.EPSILON) * 100) / 100;
    return rnd
@@ -293,12 +297,38 @@ export function getFileReferenceNumber(filename){
 }
 
 
-String.prototype.hashCode = function(seed = 0) {
+export function getRandomIdOrHash(textStrOrIntLength){
+  if( typeof(textStrOrIntLength)=='string'){
+    return hashCode(textStrOrIntLength)
+  } else if( typeof(textStrOrIntLength)=='number') {
+    return getRandomString(7)
+  } else {
+    throw new Error("TypeError: string or integer required")
+  }
+}
+
+
+export function getRandomString(length) {
+  // Generate random string given the length
+  //ref: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+
+export function hashCode(text, seed = 0) {
   // Generate hash from string
   //ref: https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-  for(let i = 0, ch; i < this.length; i++) {
-      ch = this.charCodeAt(i);
+  for(let i = 0, ch; i < text.length; i++) {
+      ch = text.charCodeAt(i);
       h1 = Math.imul(h1 ^ ch, 2654435761);
       h2 = Math.imul(h2 ^ ch, 1597334677);
   }

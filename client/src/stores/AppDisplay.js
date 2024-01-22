@@ -46,7 +46,10 @@ export const useAppDisplay = defineStore('display',{
         },
         getPanes(){
             return this.splitPanes.panes
-        }
+        },
+        rotateText(){
+            return { transform: 'rotate(' + this.splitPanes.rotateText.turn + 'turn)'}
+         },
     },
     actions:{
         setSelectedBoardId(id){
@@ -56,9 +59,61 @@ export const useAppDisplay = defineStore('display',{
             this.splitPanes.panes[pane][attr] = newValue
         },
         initializeSplitPanes(){
-            for(const [name, pane] of Object.entries(this.splitPanes.panes)){
+            for(const pane of Object.values(this.splitPanes.panes)){
                 pane.currentSize = pane.defaultSize
             }
-        }
+        },
+        showPanes(type, panes){
+            if(panes[0].size <= 15){
+              this.setPane('outline', 'showContent', false)
+              this.setPane('outline', 'headerStyle', this.rotateText)
+            }else{
+              this.setPane('outline', 'showContent', true)
+              this.setPane('outline', 'headerStyle', '')
+            }
+            if(panes[1].size <= 20){
+              this.setPane('image', 'showContent', false)
+              this.setPane('image', 'headerStyle', this.rotateText)
+            }else{
+              this.setPane('image', 'showContent', true)
+              this.setPane('image', 'headerStyle', '')
+            }
+            if(panes[2].size <= 15){
+              this.setPane('layout', 'showContent', false)
+              this.setPane('layout', 'headerStyle', this.rotateText)
+            }else{
+              this.setPane('layout', 'showContent', true)
+              this.setPane('layout', 'headerStyle', '')
+            }
+          },
+        expandPane(paneName){
+            //const paneName = event.srcElement.innerHTML.replaceAll(" ", "")
+            const MaxSize = 200
+            const ExpandRules = {
+                  Outline:()=>{
+                    this.setPane('outline','currentSize', MaxSize)
+                    this.setPane('image','currentSize', 15)
+                    this.setPane('layout','currentSize', 15)
+                  },
+                  Image:()=>{
+                    this.setPane('outline','currentSize', 15)
+                    this.setPane('image','currentSize', MaxSize)
+                    this.setPane('layout','currentSize', 15)
+    
+                  }, 
+                  Layout:()=>{
+                    this.setPane('outline','currentSize', 15)
+                    this.setPane('image','currentSize', 15)
+                    this.setPane('layout','currentSize', MaxSize)
+                  } 
+                }
+            ExpandRules[paneName]()
+            const currentSizesByPane = Object.values(this.getPanes).map(item => (
+              {size: item.currentSize}
+            ))
+            this.showPanes('resize', currentSizesByPane)
+          },
+
+
     }
 })
