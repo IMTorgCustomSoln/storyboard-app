@@ -5,59 +5,10 @@
         <b-card>
             <b-row>
                 <b-col cols="3" style="padding-top:60px;">
-                    <h5>Layers</h5>
-                    <p>Check a single layer where the image should be saved.</p>
-                    <VueDraggable 
-                        ref="el"
-                        v-model="layers" 
-                        :animation="150"
-                        ghostClass="ghost"
-                        @start="onStart"
-                        @update="onUpdate"
-                        >
-                        <b-form-checkbox-group
-                            id="checkbox-group"
-                            v-model="selectedLayer"
-                            :aria-describedby="ariaDescribedby"
-                            name="selected-layer"
-                          >
-                        <div v-for="(item, index) in layers" :key="item.id">
-                            <div class="column_container">
-                                <b-row>
-                                    <b-col cols="2">
-                                        <b-form-checkbox
-                                          name="selected-layer"
-                                          :value=item.id
-                                          :disabled="isDisabledLayer(item)"
-                                          ><!--
-                                            TODO:an error occurs, but why: Uncaught TypeError: assign is not a function at HTMLInputElement.<anonymous>
-                                                ref: https://github.com/bootstrap-vue/bootstrap-vue/discussions/6407
-                                          v-model="item.selected"
-                                          value="true"
-                                          unchecked-value="false"
-                                        >-->
-                                        </b-form-checkbox>
-                                    </b-col>
-                                    <b-col cols="8">
-                                        <input type="text" v-model="item.name" class="layer" style="width:100px;" />
-                                    </b-col>
-                                    <b-col cols="2">
-                                        <b-icon-x-square class="cursor-pointer dim"
-                                            @click="remove(index)">X</b-icon-x-square>
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </div>
-                        </b-form-checkbox-group>
-                    </VueDraggable>
-                    <!-- Add Button -->
-                    <b-row>
-                      <b-col style="text-align:center;">
-                        <b-icon-plus class="mb-0 dim" style="margin:0px" @click="layerAdd">
-                        </b-icon-plus>
-                      </b-col>
-                    </b-row>
+                    <LayerSelect/>
                 </b-col>
+
+                <!-- Tabs -->
                 <b-col cols="9">
                     <b-tabs content-class="mt-3">
                         <b-tab title="Freehand" active>
@@ -86,8 +37,7 @@
 </template>
 
 <script>
-import { VueDraggable } from 'vue-draggable-plus'
-
+import LayerSelect from '@/components/image/LayerSelect.vue'
 import FreeHand from '@/components/image/FreehandImage.vue'
 
 export default {
@@ -97,33 +47,18 @@ export default {
         COMPONENT_V_MODEL: false
     },
     components: {
-        VueDraggable,
+        LayerSelect,
         FreeHand
     },
     data() {
-        return {
+        return {/*
             selectedLayer: [],
             layers: [
                 { name: 'layer-1', id: 0, image: null}
-            ]
+            ]*/
         }
     },
     methods: {
-        isDisabledLayer(item){
-            //const {selectedLayer} = this
-            return this.selectedLayer.length === 1 && !(this.selectedLayer[0] === item.id)
-        },
-        layerAdd() {
-            const length = this.layers.length
-            this.layers.push({
-                name: `layer-${length+1}`,
-                id: `${length}`,
-                image: null
-            })
-        },
-        remove(index) {
-            this.layers.splice(index, 1)
-        },
         onChildSaved(image){
             //Save image that comes from child tab
             console.log(image)
@@ -141,7 +76,8 @@ export default {
 
 </script>
 
-<style scoped>
+<style >
+/*TODO:not scoped so that it works with LayerSelect*/
 
 .ghost {
   opacity: 0.5;

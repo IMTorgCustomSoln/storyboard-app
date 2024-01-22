@@ -7,6 +7,13 @@ export const useAppDisplay = defineStore('display',{
             exportAppStateFileName: 'WorkSession.gz',
             selectedBoardId: null,
 
+            imageEditor:{
+                selectedLayer: [],
+                layers: [
+                    { name: 'layer-1', id: 0, image: null}
+                ]
+            },
+
             splitPanes:{
                 rotateText:{
                     turn: 0.25
