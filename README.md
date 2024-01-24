@@ -31,3 +31,23 @@ npm run dev
 ## ToDo
 
 __ Staging__
+
+logic-2
+* board-image clicked => selectedBoardId
+* if image is svg => load layers (g) into imageEditor:{layers:[...]}
+  - else if image is placeholder => save initial svg with layer-0
+  - else error
+* perform freehand sketch on different layers
+* save layers to board-image
+
+logic-1
+BoardOutline should have similar logic as layers, such asthe following:
+* at least one board should always be available
+* this board should be selected, by default
+* selected board image is always loaded into imageEditor
+
+state
+* board-image should be initialized as svg and placeholderimage within `g`
+* layers should always be maintained `layers` with board,then saved as `g` within image
+* ImageEditor will only use data of selected Board
+ 

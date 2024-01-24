@@ -58,6 +58,9 @@ export default {
             ]*/
         }
     },
+    computed:{
+        
+    },
     methods: {
         onChildSaved(image){
             //Save image that comes from child tab

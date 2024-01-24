@@ -100,9 +100,20 @@ export class Board{
         }
         this.id = getRandomIdOrHash(input)
         this.description = description
+        /*TODO: image is initialized with <svg><image>
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <image href="mdn_logo_only_color.png" height="200" width="200" />
+        </svg>
+        */
         this.image = image
+        //TODO:add imageEditor:{layers...
         this._brighten = false
-    }
+    }/*
+    TODO:add methods here
+    * save layers to image
+    * addLayer()
+    * removeLayer()
+    */
 }
 
 export class Layout{

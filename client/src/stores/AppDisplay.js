@@ -7,6 +7,7 @@ export const useAppDisplay = defineStore('display',{
             exportAppStateFileName: 'WorkSession.gz',
             selectedBoardId: null,
 
+            //TODO:move to StoryContent for each Board
             imageEditor:{
                 selectedLayer: [0],
                 layers: [
