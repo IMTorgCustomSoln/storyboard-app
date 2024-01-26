@@ -81,14 +81,7 @@ export default{
      }
     },
     methods:{
-      resetPanes(){
-        this.displayStore.initializeSplitPanes()
-        const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
-          {size: item.currentSize}
-        ))
-        //console.log(currentSizesByPane)
-        this.displayStore.showPanes('resize', currentSizesByPane)
-      }
+      
     }
 
 }
@@ -109,7 +102,8 @@ h1 {
 
 
 .panel {
-    height: 100%;
+    /*height: 100%; */
+    height: 100vh;
     margin: 0;
 }
 

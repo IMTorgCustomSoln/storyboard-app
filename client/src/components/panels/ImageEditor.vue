@@ -2,7 +2,7 @@
 
     <!-- Add Content -->
     <div>
-        <b-card>
+        <!--<b-card>-->
             <b-row>
                 <b-col cols="3" style="padding-top:60px;">
                     <!--<LayerSelect/>-->
@@ -32,7 +32,7 @@
                     </b-tabs>
                 </b-col>
             </b-row>
-        </b-card>
+        <!--</b-card>-->
     </div>
 </template>
 

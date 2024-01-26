@@ -1,35 +1,15 @@
 <template>
-    <b-navbar type="dark" variant="dark">
-        <b-navbar-nav >
-            <b-nav-item >Logo</b-nav-item>
-            <b-button class="reset" sz="sm" @click="resetPanes">Reset Panes</b-button>
-        </b-navbar-nav>
-      
-          <!--
+    <b-navbar toggleable="lg" type="dark" variant="dark">
+
+          <b-navbar-brand href="#">Logo</b-navbar-brand>
+
+            <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-            <b-nav-form>
-              <WorkSessionIO></WorkSessionIO>
-            
-            <b-button 
-              size="sm" 
-              class="my-2 my-sm-0" 
-              variant="outline-light" 
-              style="margin-left:5px"
-              type="button"
-              v-b-modal="'account-modal'"
-              @click="$bvModal.show('account-modal')"
-              >User
-            </b-button>
-            <ModalAccount/>
-            </b-nav-form>
-            
-            Open modal from dropdown, ref: https://stackoverflow.com/questions/65298847/how-can-i-modify-a-dropdown-item-in-bootstrap-vue-to-open-a-modal
-            <b-nav-item-dropdown text="User" right>
-              <b-dropdown-item href="#">Account</b-dropdown-item>
-              <b-dropdown-item href="#">Settings</b-dropdown-item>
-            </b-nav-item-dropdown>
-            
-            </b-navbar-nav>-->
+              <b-nav-form right>
+                <b-button class="reset" sz="sm" @click="resetPanes">Reset Panes</b-button>
+              </b-nav-form>
+            </b-navbar-nav>
+      
         </b-navbar>
 </template>
     
@@ -72,9 +52,11 @@ export default {
 
 
 <style scoped>
-/*
+
 .navbar{
-    margin-bottom: 10px;
-}*/
+    /*margin-bottom: 10px;*/
+    padding-left: 10px;
+    padding-right: 10px;
+}
 
 </style>
