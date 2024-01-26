@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import { getRandomIdOrHash } from '@/scripts/utils'
 
-import { stringSvg } from "@/components/__tests__/images/line";
+import { stringSvg } from "@/components/__tests__/images/groups";
 
 
 export const useStoryContent = defineStore('story', {
     state(){
         return{
             name: null,
+            selectedBoardId: null,
             boards: [],
             layouts: []
         }
@@ -19,13 +20,15 @@ export const useStoryContent = defineStore('story', {
         async getBoards(){
             return toRaw(this.boards)
         },*/
+        getSelectedBoardId(){
+            return this.selectedBoardId
+        },
         getBoards(){
             return this.boards
         },
         getLayouts(){
             return this.layouts
         }
-
     },
     actions:{
         async initializeStoryFromBackend(){
@@ -56,12 +59,37 @@ export const useStoryContent = defineStore('story', {
             ])
             }
             boards.forEach(board => {
-                this.addBoard(
-                    board.description,
-                    board.image
-                    )
+                this.addBoard(board.description)
             })
             return true
+        },
+        isSelectedBoardAvailable(){
+            const id = this.getSelectedBoardId
+            if([null,undefined].indexOf(id)==-1){
+              const selectedBoard = this.getBoards.filter(item => {
+                if(item.id==id){ 
+                  return true 
+                }else{ 
+                  return false
+                }
+              })
+              if(selectedBoard.length>0){
+                return true
+              }else{
+                return false
+              }
+            }else{
+              return false
+            }
+        },
+        setSelectedBoardId(id){
+            this.selectedBoardId = id
+        },
+        setNewSelectedBoard(){
+          if(this.isSelectedBoardAvailable()==false){
+            const newBoardId = this.boards[0].id
+            this.setSelectedBoardId(newBoardId)
+          }
         },
         addBoard(description, images){
             const newBoard = new Board(description, images)
@@ -69,6 +97,9 @@ export const useStoryContent = defineStore('story', {
         },
         removeBoard(index){
             this.boards.splice(index, 1)
+            if(this.getBoards.length < 1){
+                this.addBoard()
+            }
         },
         removeBoardById(id){
             const index = this.boards.findIndex((item)=>{
@@ -90,31 +121,77 @@ export const useStoryContent = defineStore('story', {
     }
 })
 
+
+
 export class Board{
-    constructor(description, image){
-        let input = 0
-        if(description.length<1){
-            input = 7
-        } else {
-            input = description
-        }
+    constructor(description){
+        const input = 5
         this.id = getRandomIdOrHash(input)
         this.description = description
-        /*TODO: image is initialized with <svg><image>
-        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-            <image href="mdn_logo_only_color.png" height="200" width="200" />
-        </svg>
-        */
-        this.image = image
-        //TODO:add imageEditor:{layers...
+        this.imageEditor = {
+            selectedLayer: [0],
+            layers: [ { name: 'layer-1', id: 0, group: null }]    //image: null} ]
+        }
         this._brighten = false
-    }/*
-    TODO:add methods here
-    * save layers to image
-    * addLayer()
-    * removeLayer()
-    */
+    }
+    getImage(){
+        function fillSvgBase(id, groups){
+            const strGroups = groups.join(``)
+            return `<svg id=${id} viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">${strGroups}</svg>`
+        }
+        const groups = []
+        const nonNullGroups = this.imageEditor.layers.filter(item =>{
+            if(item.group!=null){
+                return true
+            }else{
+                return false
+            }
+        })
+        .map(item => item.group)
+        nonNullGroups.length > 0 ? groups.push(...nonNullGroups) : groups.push(...[stringSvg])
+        return fillSvgBase(this.id, groups)
+    }
+    getSelectedLayer(){
+        return this.imageEditor.selectedLayer[0]
+    }
+    getLayers(){
+        return this.imageEditor.layers
+    }
+    addLayer() {
+        const code = getRandomIdOrHash(5)
+        this.imageEditor.layers.push({
+            name: `layer- ${code}`,
+            id: code,
+            image: null
+        })
+    }
+    removeLayer(index) {
+        this.imageEditor.layers.splice(index, 1)
+        const length = this.imageEditor.layers.length
+        if(length < 1){
+            this.addLayer()
+            const id = this.imageEditor.layers[0].id
+            const sim_event = {
+                target:{
+                    checked: true,
+                    value: id
+                }
+            }
+            //TODO:fix
+            this.uniqueCheck(sim_event)
+        }
+        //TODO:wtf
+        const ids = this.imageEditor.layers.map(item => item.id)
+        const selectedItem = this.imageEditor.selectedLayer[0]
+        const isCheckedInLayers = ids.indexOf(selectedItem) 
+        if(isCheckedInLayers==-1){
+            this.imageEditor.selectedLayer = []
+            this.imageEditor.selectedLayer.push(ids[0])
+        }
+    }
 }
+
+
 
 export class Layout{
     constructor(name, dimension, gridObj){

@@ -1,23 +1,28 @@
 <template>
-  <div id="app">
+
     <NavbarTop/>
-    <SplitPane>
-      <template v-slot:outline>
-        <BoardOutline/>
-      </template>
-      <template v-slot:image>
-        <ImageEditor/>
-      </template>
-      <template v-slot:layout>
-        <PageLayout/>
-      </template>
-    </SplitPane>
+    <div v-if="isDataLoaded">
+      <SplitPane>
+        <template v-slot:outline>
+          <BoardOutline/>
+        </template>
+        <template v-slot:image>
+          <ImageEditor/>
+        </template>
+        <template v-slot:layout>
+          <PageLayout/>
+        </template>
+      </SplitPane>
+    </div>
     <!--<FooterBar class="footer"></FooterBar>-->
-  </div>
+
 </template>
 
 <script>
+import { mapStores } from 'pinia'
 //import {useDisplayStore} from '@/main.js';
+import { useStoryContent} from '@/stores/StoryContent'
+
 import NavbarTop from '@/components/NavbarTop.vue';
 import SplitPane from '@/components/SplitPane.vue';
 //import FooterBar from '@/components/FooterBar.vue';
@@ -39,9 +44,26 @@ components:{
 },
 data() {
   return {
-  };
+    dataLoaded: false
+  }
+},
+async created(){
+    this.storyStore.initializeStoryFromBackend()
+    const boards = await this.storyStore.getBoards
+    this.storyStore.setNewSelectedBoard()
+    if(boards.length>0){
+      this.dataLoaded = true
+    }
 },
 computed:{
+  ...mapStores(useStoryContent),
+  isDataLoaded(){
+      if(this.storyStore.boards && this.storyStore.boards.constructor === Array){
+        return true
+      }else{
+        return false
+      }
+    }
 },
 methods:{
 }
@@ -50,13 +72,18 @@ methods:{
 
 <style>
   #app {
+    /*
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
+    
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;*/
   }
 
   .NOT_USED_footer {

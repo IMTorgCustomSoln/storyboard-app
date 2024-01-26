@@ -1,8 +1,6 @@
 <template>
 
   <!-- Add Content -->
-  <div v-if="isDataLoaded">
-
   <div style="margin:10px">
     <VueDraggable 
       v-model="this.storyStore.getBoards" 
@@ -22,24 +20,26 @@
                 rows="3"></b-form-textarea>
             </b-col>
             <b-col cols="3">
-              <div style="width:100px; vertical-align: text-top;">
-                <div v-if="board.image">
-                <span v-html="board.image"></span>
+              <div style="vertical-align: text-top;">
+                <div style="width:80px">
+                  <div v-if="board.getImage()">
+                    <span v-html="board.getImage()"></span>
+                  </div>
+                  <div v-else>
+                    <img :src="this.src='/src/components/icons/placeholder.png'" style="height:80px; margin:auto" />
+                  </div>
                 </div>
-                <div v-else>
-                  <img :src="this.src='/src/components/icons/placeholder.png'" style="height:80px; margin:auto" />
-                </div>
-                <b-icon-box-arrow-up-right 
+              <b-icon-box-arrow-up-right 
                   @click="openImageInPanel(board)"
                   v-b-hover="hoverHandler"
                   
                   style="position: absolute"
                   ><!-- TODO:  :class="brighten: isHovered(location.id)"   -->
-                </b-icon-box-arrow-up-right>
+              </b-icon-box-arrow-up-right>
               </div>
             </b-col>
             <b-col cols="1">
-              <b-icon-x-square class="cursor-pointer dim" @click="this.storyStore.removeBoard(index)">X</b-icon-x-square>
+              <b-icon-x-square class="cursor-pointer dim" @click="removeBoard(index)">X</b-icon-x-square>
             </b-col>
           </b-row>
         </div>
@@ -58,7 +58,6 @@
     <preview-list :list="this.storyStore.boards" />
   </div>
 
-</div>
 </template>
 
 <script>
@@ -81,20 +80,23 @@ export default {
   data() {
     return {}
   },
+  /*
   async created(){
-    this.storyStore.initializeStoryFromBackend()
+    //this.storyStore.initializeStoryFromBackend()
     const boards = await this.storyStore.getBoards
+    this.setNewSelectedBoard()
     return boards
-  },
+  },*/
   computed:{
     ...mapStores(useAppDisplay, useStoryContent),
+    /*
     isDataLoaded(){
       if(this.storyStore.boards && this.storyStore.boards.constructor === Array){
         return true
       }else{
         return false
       }
-    }
+    }*/
   },
   methods: {
     hoverHandler(isHovered){
@@ -106,6 +108,10 @@ export default {
     openImageInPanel(item){
       this.displayStore.expandPane('Image')
       this.displayStore.setSelectedBoardId(item.id)
+    },
+    removeBoard(index){
+      this.storyStore.removeBoard(index)
+      this.storyStore.setNewSelectedBoard()
     }
   }
 }

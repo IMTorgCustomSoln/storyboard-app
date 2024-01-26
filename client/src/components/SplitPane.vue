@@ -1,9 +1,4 @@
 <template>
-  <b-row>
-    <b-col>
-      <b-button class="reset" sz="sm" @click="resetPanes">Reset Panes</b-button>
-    </b-col>
-  </b-row>
   <div class="panel">
     <Splitpanes 
       class="default-theme" 

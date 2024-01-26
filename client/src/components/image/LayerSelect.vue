@@ -66,7 +66,6 @@
 <script>
 import { mapStores } from 'pinia'
 import { VueDraggable } from 'vue-draggable-plus'
-import { getRandomIdOrHash } from '@/scripts/utils'
 
 import { useAppDisplay } from '@/stores/AppDisplay'
 
@@ -88,7 +87,6 @@ export default{
         ...mapStores(useAppDisplay)
     },
     methods:{
-        //TODO:some logic should probably be in AppDisplay???
         uniqueCheck(e){
             this.displayStore.imageEditor.selectedLayer = []
             if (e.target.checked) {
@@ -99,7 +97,7 @@ export default{
             //TODO: dislpay non-checked layers are disables by dim
             //const {selectedLayer} = this
             return this.displayStore.imageEditor.selectedLayer.length === 1 && !(this.displayStore.imageEditor.selectedLayer [0] === item.id)
-        },
+        },/*
         addLayer() {
             const code = getRandomIdOrHash(5)
             this.displayStore.imageEditor.layers.push({
@@ -129,7 +127,7 @@ export default{
                 this.displayStore.imageEditor.selectedLayer = []
                 this.displayStore.imageEditor.selectedLayer.push(ids[0])
             }
-        },
+        },*/
     }
 }
 </script>

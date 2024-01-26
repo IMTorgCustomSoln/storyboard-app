@@ -5,7 +5,7 @@
         <b-card>
             <b-row>
                 <b-col cols="3" style="padding-top:60px;">
-                    <LayerSelect/>
+                    <!--<LayerSelect/>-->
                 </b-col>
 
                 <!-- Tabs -->
@@ -47,7 +47,7 @@ export default {
         COMPONENT_V_MODEL: false
     },
     components: {
-        LayerSelect,
+        //LayerSelect,
         FreeHand
     },
     data() {

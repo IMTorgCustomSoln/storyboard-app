@@ -47,7 +47,7 @@ BoardOutline should have similar logic as layers, such asthe following:
 * selected board image is always loaded into imageEditor
 
 state
-* board-image should be initialized as svg and placeholderimage within `g`
-* layers should always be maintained `layers` with board,then saved as `g` within image
+* ~~board-image should be initialized as svg and placeholderimage within `g`~~
+* ~~layers should always be maintained `layers` with board,then created as `g` within image~~
 * ImageEditor will only use data of selected Board
  

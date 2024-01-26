@@ -5,15 +5,15 @@ export const useAppDisplay = defineStore('display',{
     state: () => {
         return {
             exportAppStateFileName: 'WorkSession.gz',
-            selectedBoardId: null,
+            //selectedBoardId: null,
 
-            //TODO:move to StoryContent for each Board
+            /*TODO:move to StoryContent for each Board
             imageEditor:{
                 selectedLayer: [0],
                 layers: [
                     { name: 'layer-1', id: 0, image: null}
                 ]
-            },
+            },*/
 
             splitPanes:{
                 rotateText:{
@@ -42,27 +42,18 @@ export const useAppDisplay = defineStore('display',{
                         headerStyle: ''
                     },
                 },
-                //...
-
-
             }
         }
     },
     getters:{
-        getSelectedBoardId(){
-            return this.selectedBoardId
-        },
-        getPanes(){
-            return this.splitPanes.panes
-        },
-        rotateText(){
-            return { transform: 'rotate(' + this.splitPanes.rotateText.turn + 'turn)'}
-         },
+      getPanes(){
+          return this.splitPanes.panes
+      },
+      rotateText(){
+          return { transform: 'rotate(' + this.splitPanes.rotateText.turn + 'turn)'}
+       },
     },
     actions:{
-        setSelectedBoardId(id){
-            this.selectedBoardId = id
-        },
         setPane(pane, attr, newValue){
             this.splitPanes.panes[pane][attr] = newValue
         },
