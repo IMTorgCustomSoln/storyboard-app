@@ -130,7 +130,11 @@ export default{
           item.w = this.selectedAspect.itemWidth;
           item.h = this.selectedAspect.itemHeight;
 
-          item.content = item.image   //'<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />' //, locked:true, content:"locked"},
+          if(item.getImage()!=null){
+            item.content = item.getImage()
+          }else{
+            item.content = '<img src="./src/components/icons/placeholder.png" alt="Placeholder" fluid />'  //, locked:true, content:"locked"},
+          }
         })
 
         for(const [idx, page] of this.pages.entries()){

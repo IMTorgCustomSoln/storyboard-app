@@ -257,9 +257,7 @@ export class Board{
                 this.imageEditor.layers.forEach(item => item.checked == false)
                 this.imageEditor.layers[0].checked = true
             }*/
-            console.log(this.imageEditor.selectedLayer[0])
             if([0,null,undefined].indexOf(this.imageEditor.selectedLayer[0])!=-1){
-                console.log(this.imageEditor.selectedLayer)
                 this.imageEditor.selectedLayer = []
                 this.imageEditor.selectedLayer.push(this.imageEditor.layers[0].id)
             }

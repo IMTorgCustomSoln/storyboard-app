@@ -77,12 +77,6 @@ export default {
                     return false
                 }
             })
-            console.log(layers[0].group)
-            /*
-            const svg = document.querySelector("#freehand-canvas");
-            const layer = svg.querySelector("#layer-TARGET")
-            layer.appendSibling(layers[0].group)
-            */
             return layers[0].group
         }
     },
