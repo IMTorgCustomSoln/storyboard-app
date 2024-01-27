@@ -53,12 +53,14 @@ async created(){
     this.storyStore.setNewSelectedBoard()
     if(boards.length>0){
       this.dataLoaded = true
+      console.log('DATA INITIALIZED')
     }
 },
 computed:{
   ...mapStores(useStoryContent),
   isDataLoaded(){
-      if(this.storyStore.boards && this.storyStore.boards.constructor === Array){
+      if(this.storyStore.boards && this.storyStore.boards.constructor === Array && this.storyStore.getSelectedBoardId!=null){
+        console.log('DATA LOADED')
         return true
       }else{
         return false

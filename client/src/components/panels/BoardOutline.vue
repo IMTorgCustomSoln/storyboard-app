@@ -107,7 +107,7 @@ export default {
     },
     openImageInPanel(item){
       this.displayStore.expandPane('Image')
-      this.displayStore.setSelectedBoardId(item.id)
+      this.storyStore.setSelectedBoardId(item.id)
     },
     removeBoard(index){
       this.storyStore.removeBoard(index)

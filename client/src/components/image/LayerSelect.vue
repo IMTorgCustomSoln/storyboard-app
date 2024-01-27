@@ -3,7 +3,7 @@
                     <p>Check a single layer where the image should be saved.</p>
                     <VueDraggable 
                         ref="el"
-                        v-model="this.displayStore.imageEditor.layers" 
+                        v-model="this.getLayers" 
                         :animation="150"
                         ghostClass="ghost"
                         @start="onStart"
@@ -16,15 +16,15 @@
                             :aria-describedby="ariaDescribedby"
                             name="selected-layer"
                           >-->
-                        <div v-for="(item, index) in this.displayStore.imageEditor.layers" :key="item.id">
+                        <div v-for="(item, index) in this.getLayers" :key="item.id">
                             <div class="column_container">
                                 <b-row>
                                     <b-col cols="2">
                                         <input 
                                             type="checkbox" 
                                             :value="item.id" 
-                                            v-model="this.displayStore.imageEditor.selectedLayer" 
-                                            @change="uniqueCheck"
+                                            v-model="this.getSelectedLayer" 
+                                            @change="uniqueCheckMark"
                                             >
                                         <!--
                                         <b-form-checkbox
@@ -67,7 +67,8 @@
 import { mapStores } from 'pinia'
 import { VueDraggable } from 'vue-draggable-plus'
 
-import { useAppDisplay } from '@/stores/AppDisplay'
+//import { useAppDisplay } from '@/stores/AppDisplay'
+import { useStoryContent } from '@/stores/StoryContent'
 
 export default{
     name:'LayerSelect',
@@ -84,20 +85,41 @@ export default{
         }
     },
     computed:{
-        ...mapStores(useAppDisplay)
-    },
+        ...mapStores(useStoryContent),
+        getLayers(){
+            //this.storyStore.getSelectedBoard.ensureUniqueCheckMark()
+            const layers = this.storyStore.getSelectedBoard.getLayers()
+            return layers
+        },
+        getSelectedLayer(){
+            return this.storyStore.getSelectedBoard.getSelectedLayer()
+        }
+    },//TODO:fix this mess of unreactive shit
     methods:{
-        uniqueCheck(e){
-            this.displayStore.imageEditor.selectedLayer = []
+        uniqueCheckMark(e){
+            this.storyStore.getSelectedBoard.imageEditor.selectedLayer = []
             if (e.target.checked) {
-                this.displayStore.imageEditor.selectedLayer.push(e.target.value)
+                this.storyStore.getSelectedBoard.imageEditor.selectedLayer.push(e.target.value)
             }
         },
         isDisabledLayer(item){
             //TODO: dislpay non-checked layers are disables by dim
             //const {selectedLayer} = this
-            return this.displayStore.imageEditor.selectedLayer.length === 1 && !(this.displayStore.imageEditor.selectedLayer [0] === item.id)
-        },/*
+            return this.getSelectedLayer.length === 1 && !(this.getSelectedLayer[0] === item.id)
+        },
+        setSelectedLayer(id){
+            this.storyStore.getSelectedBoard.imageEditor.selectedLayer == []
+            this.storyStore.getSelectedBoard.imageEditor.selectedLayer.push(id) 
+        },
+        addLayer(){
+            const id = this.storyStore.getSelectedBoard.addLayer()
+            this.storyStore.getSelectedBoard.setSelectedLayer(id)
+            //this.setSelectedLayer(id)
+        },
+        removeLayer(index){
+            this.storyStore.getSelectedBoard.removeLayer(index)
+        },
+        /*
         addLayer() {
             const code = getRandomIdOrHash(5)
             this.displayStore.imageEditor.layers.push({
@@ -118,7 +140,7 @@ export default{
                         value: id
                     }
                 }
-                this.uniqueCheck(sim_event)
+                this.uniqueCheckMark(sim_event)
             }
             const ids = this.displayStore.imageEditor.layers.map(item => item.id)
             const selectedItem = this.displayStore.imageEditor.selectedLayer[0]

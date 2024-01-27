@@ -17,7 +17,8 @@
         </b-row>
         <b-aspect :aspect="aspect">
             <div>
-        <svg id="freehand-canvas" 
+        <svg 
+            id="freehand-canvas" 
             @pointerdown="handlePointerDown" 
             @pointermove="handlePointerMove"
             
@@ -30,9 +31,14 @@
                     * SVGGraphicsElement: https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement
                     * DOMPoint: https://developer.mozilla.org/en-US/docs/Web/API/DOMPointReadOnly
             -->
-            <g id="layer-1">
+            <g id="background">
+                <rect x="0" y="0" width="1000" height="1000" style="fill:white"></rect>
+            </g>
+            <g id="layer-TARGET">
                 <path />
             </g>
+            <g v-html="getSelectedGroup"></g>
+            
         </svg>
             </div>
         </b-aspect>
@@ -40,6 +46,9 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+import { useStoryContent} from '@/stores/StoryContent'
+
 import { getStroke } from "perfect-freehand";
 
 export default {
@@ -53,6 +62,28 @@ export default {
             aspect:'1:1',
             points: [],
             setPoints: null
+        }
+    },
+    computed:{
+        ...mapStores(useStoryContent),
+        getGroups(){
+            return this.storyStore.getSelectedBoard.getLayers()
+        },
+        getSelectedGroup(){
+            const layers = this.storyStore.getSelectedBoard.getLayers().filter(item => {
+                if(item.id==this.storyStore.getSelectedBoard.getSelectedLayer()){
+                    return true
+                }else{
+                    return false
+                }
+            })
+            console.log(layers[0].group)
+            /*
+            const svg = document.querySelector("#freehand-canvas");
+            const layer = svg.querySelector("#layer-TARGET")
+            layer.appendSibling(layers[0].group)
+            */
+            return layers[0].group
         }
     },
     methods: {
@@ -81,7 +112,7 @@ export default {
         },
         render() {
             const svg = document.querySelector("#freehand-canvas");
-            const layer = svg.querySelector("#layer-1")
+            const layer = svg.querySelector("#layer-TARGET")
 
             const newpath = document.createElementNS('http://www.w3.org/2000/svg',"path");
             newpath.setAttribute('d', getSvgPathFromStroke(

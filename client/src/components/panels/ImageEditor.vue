@@ -5,7 +5,7 @@
         <!--<b-card>-->
             <b-row>
                 <b-col cols="3" style="padding-top:60px;">
-                    <!--<LayerSelect/>-->
+                    <LayerSelect/>
                 </b-col>
 
                 <!-- Tabs -->
@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+import { useStoryContent} from '@/stores/StoryContent'
+
 import LayerSelect from '@/components/image/LayerSelect.vue'
 import FreeHand from '@/components/image/FreehandImage.vue'
 
@@ -47,7 +50,7 @@ export default {
         COMPONENT_V_MODEL: false
     },
     components: {
-        //LayerSelect,
+        LayerSelect,
         FreeHand
     },
     data() {
@@ -59,6 +62,7 @@ export default {
         }
     },
     computed:{
+        ...mapStores(useStoryContent),
         
     },
     methods: {
