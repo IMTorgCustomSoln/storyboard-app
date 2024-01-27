@@ -9,7 +9,7 @@
                 </b-col>
 
                 <!-- Tabs -->
-                <b-col cols="9">
+                <b-col cols="9" class="editor-container">
                     <b-tabs content-class="mt-3">
                         <b-tab title="Freehand" active>
                             <b-container>
@@ -117,5 +117,8 @@ export default {
 .dim {
   color: #979797;
 }
-
+/*
+.editor-container{
+    background-color: #e7e7e7;
+}*/
 </style>

@@ -166,7 +166,7 @@ export default{
     padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
-    /*background-color: #e7e7e7;*/
+    background-color: #e7e7e7;
     border-color: #e7e7e7;
     border-width: 1px;
     border-radius: 5px;
@@ -184,6 +184,6 @@ export default{
 }
 
 .dim {
-  color: #979797;
+  color: #656565;
 }
 </style>
