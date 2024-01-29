@@ -5,11 +5,11 @@
                 <b-navbar type="light" variant="">
                     <b-navbar-nav>
                         <b-button 
-                            @click="saveSvg" 
+                            @click="TODO_something" 
                             size="sm" 
                             style="margin:5px;"
                             >
-                            Save
+                            Something
                         </b-button>
                     </b-navbar-nav>
                 </b-navbar>
@@ -21,6 +21,7 @@
             id="freehand-canvas" 
             @pointerdown="handlePointerDown" 
             @pointermove="handlePointerMove"
+            @pointerup="handlePointerUp"
             
             viewBox="0 0 1000 1000"
             aspect-ratio="XminYmin"
@@ -34,10 +35,11 @@
             <g id="background">
                 <rect x="0" y="0" width="1000" height="1000" style="fill:white"></rect>
             </g>
-            <g id="layer-TARGET">
+            <!--
                 <path />
-            </g>
-            <g v-html="getSelectedGroup"></g>
+                <g ></g>-->
+            <g id="layer-TARGET" v-html="getSelectedGroup"></g>
+            <g v-html="getUnSelectedGroups"></g>
             
         </svg>
             </div>
@@ -70,23 +72,47 @@ export default {
             return this.storyStore.getSelectedBoard.getLayers()
         },
         getSelectedGroup(){
-            const layers = this.storyStore.getSelectedBoard.getLayers().filter(item => {
+            const layers = this.storyStore.getSelectedBoard.getLayers()
+            const selectedLayer = layers.filter(item => {
                 if(item.id==this.storyStore.getSelectedBoard.getSelectedLayer()){
                     return true
                 }else{
                     return false
                 }
             })
-            return layers[0].group
+            let groupPath = '<g></g>'
+            if(selectedLayer.length==1){
+                if(selectedLayer[0].group!=null){
+                const group = selectedLayer[0].group
+                /*
+                const parser = new DOMParser()
+                const parsed = parser.parseFromString(group, 'image/svg+xml')
+                const paths = [...parsed.querySelector('g').childNodes]
+                */
+                groupPath = group.replace('<g>','').replace('</g>','')
+                }
+            }
+            return groupPath
+        },
+        getUnSelectedGroups(){
+            const layers = this.storyStore.getSelectedBoard.getLayers()
+            const unSelectedLayers = layers.filter(item => {
+                if(item.id!=this.storyStore.getSelectedBoard.getSelectedLayer()){
+                    return true
+                }else{
+                    return false
+                }
+            })
+            return unSelectedLayers.map(item => item.group).join('')
         }
     },
     methods: {
         handlePointerDown(e) {
             //const point = [e.offsetX, e.offsetY, e.pressure]
-            const svg = document.querySelector("#freehand-canvas");
-            var m = svg.getScreenCTM();
+            const svg = document.querySelector("#freehand-canvas")
+            var m = svg.getScreenCTM()
             var p = new DOMPointReadOnly(e.clientX, e.clientY)
-            p = p.matrixTransform(m.inverse());
+            p = p.matrixTransform(m.inverse())
 
             const point = [p.x, p.y, e.pressure]
             this.points = [point]
@@ -95,29 +121,35 @@ export default {
         handlePointerMove(e) {
             if (e.buttons === 1) {
 			    //this.points = [...this.points, [e.offsetX, e.offsetY, e.pressure]];
-                const svg = document.querySelector("#freehand-canvas");
-                var m = svg.getScreenCTM();
+                const svg = document.querySelector("#freehand-canvas")
+                var m = svg.getScreenCTM()
                 var p = new DOMPointReadOnly(e.clientX, e.clientY)
-                p = p.matrixTransform(m.inverse());
+                p = p.matrixTransform(m.inverse())
 
-                this.points = [...this.points, [p.x, p.y, e.pressure]];
-			    this.render();
+                this.points = [...this.points, [p.x, p.y, e.pressure]]
+			    this.render()
 		    }
         },
+        handlePointerUp(e){
+            this.saveSvg()
+        },
         render() {
-            const svg = document.querySelector("#freehand-canvas");
+            const svg = document.querySelector("#freehand-canvas")
             const layer = svg.querySelector("#layer-TARGET")
 
-            const newpath = document.createElementNS('http://www.w3.org/2000/svg',"path");
+            const newpath = document.createElementNS('http://www.w3.org/2000/svg',"path")
             newpath.setAttribute('d', getSvgPathFromStroke(
                 getStroke(this.points, options)
                 )
             );
             layer.appendChild(newpath)
+            
         },
         saveSvg(){
-            const serializedSvg = document.querySelector("#freehand-canvas").parentElement.getInnerHTML()
-            this.$emit('saved', serializedSvg)
+            const newPaths = document.querySelector("#layer-TARGET").getInnerHTML()
+            const newGroup = '<g>' + newPaths + '</g>'
+            const id = this.storyStore.getSelectedBoard.getSelectedLayer()
+            this.storyStore.getSelectedBoard.appendToLayer(id, newGroup)
         }
     }
 }
