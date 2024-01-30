@@ -131,7 +131,7 @@ export default {
 			    this.render()
 		    }
         },
-        handlePointerUp(e){
+        handlePointerUp(){
             this.saveSvg()
         },
         render() {

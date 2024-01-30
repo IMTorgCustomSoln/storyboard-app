@@ -102,12 +102,21 @@ export const useStoryContent = defineStore('story', {
             if(this.boards.length < 1){
                 this.addBoard()
             }
+            this.synchronizeSelectedBoard()
         },
         removeBoardById(id){
             const index = this.boards.findIndex((item)=>{
                 item.id == id
             })
             this.boards.splice(index[0], 1)
+            this.synchronizeSelectedBoard()
+        },
+        synchronizeSelectedBoard(){
+            const ids = this.boards.map(item => item.id)
+            if(ids.indexOf(this.selectedBoardId)==-1){
+                this.selectedBoardId = ids[0]
+            }
+
         },
         addLayout(name, dimension, gridObj){
             const newLayout = new Layout(name, dimension, gridObj)

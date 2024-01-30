@@ -24,6 +24,7 @@ export class Board{
         this._brighten = false
         }
 
+        // Image
         getImageGroup(){
             const groups = []
             const nonNullGroups = this.imageEditor.layers.filter(item =>{
@@ -37,7 +38,6 @@ export class Board{
             nonNullGroups.length > 0 ? groups.push(...nonNullGroups) : groups.push(...[])
             return groups
         }
-
         getImage(){
             function fillSvgBase(id, groups){
                 const strGroups = groups.join(``)
@@ -54,21 +54,15 @@ export class Board{
                 return null
             }
         }
-        //this.getSelectedLayer = function(){
+
+        // Layers
         getSelectedLayer(){
             return this.imageEditor.selectedLayer[0]
         }
-        //this.setSelectedLayer = function(id){
         setSelectedLayer(id){
             this.imageEditor.selectedLayer = []
             this.imageEditor.selectedLayer.push(id)
         }
-        //this.getLayers = function(){
-        /*
-        getLayers(){
-            return this.imageEditor.layers
-        }*/
-        //this.addLayer = function(group) {
         addLayer(group){
             const code = getRandomIdOrHash(5)
             const newLayer = {
@@ -77,9 +71,8 @@ export class Board{
                 checked: false,
                 group: group ? group : null
             }
-            this.imageEditor.layers.push( reactive(newLayer) )
-            this.imageEditor.selectedLayer = []
-            this.imageEditor.selectedLayer.push( code )
+            this.imageEditor.layers.push( newLayer )        //TODO: add `reactive` - currently they are just objects
+            this.ensureUniqueCheckMark()
             return code
         }
         appendToLayer(id, newGroup){
@@ -87,48 +80,31 @@ export class Board{
             const index = ids.indexOf(id)
             this.imageEditor.layers[index].group = newGroup
         }
-        //this.removeLayer = function(index) {
         removeLayer(index){
             this.imageEditor.layers.splice(index, 1)
             const length = this.imageEditor.layers.length
             if(length < 1){
-                this.addLayer()
-                const id = this.imageEditor.layers[0].id
-                const sim_event = {
-                    target:{
-                        checked: true,
-                        value: id
-                    }
-                }
-                //TODO:fix
-                this.uniqueCheck(sim_event)
-            }
-            //TODO:wtf
-            const ids = this.imageEditor.layers.map(item => item.id)
-            const selectedItem = this.imageEditor.selectedLayer[0]
-            const isCheckedInLayers = ids.indexOf(selectedItem) 
-            if(isCheckedInLayers==-1){
-                this.imageEditor.selectedLayer = []
-                this.imageEditor.selectedLayer.push(ids[0])
+                const id = this.addLayer()
+                this.setSelectedLayer(id)
+                this.ensureUniqueCheckMark()
             }
         }
-        //this.ensureUniqueCheckMark = function(){
         ensureUniqueCheckMark(){
-            /*
-            const checked = this.imageEditor.layers.filter(item => {
-                if(item.checked==true){
-                    return true
-                }else{
-                    return false
-                }
-            })
-            if(checked.length != 1){
-                this.imageEditor.layers.forEach(item => item.checked == false)
-                this.imageEditor.layers[0].checked = true
-            }*/
+            //if there is NOT a selectedLayer, then select first in index
             if([0,null,undefined].indexOf(this.imageEditor.selectedLayer[0])!=-1){
                 this.imageEditor.selectedLayer = []
                 this.imageEditor.selectedLayer.push(this.imageEditor.layers[0].id)
+                this.imageEditor.layers[0].checked = true
+            //if there is a selectedLayer, then use it
+            }else{
+                const selectedId = this.imageEditor.selectedLayer[0]
+                this.imageEditor.layers.forEach(item => {
+                    if(item.id==selectedId){
+                        item.checked=true
+                    }else{
+                        item.checked=false
+                    }
+                })
             }
         }
     }

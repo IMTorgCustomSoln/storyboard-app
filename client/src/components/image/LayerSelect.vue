@@ -9,13 +9,6 @@
                         @start="onStart"
                         @update="onUpdate"
                         >
-                        <!--
-                        <b-form-checkbox-group
-                            id="checkbox-group"
-                            v-model="selectedLayer"
-                            :aria-describedby="ariaDescribedby"
-                            name="selected-layer"
-                          >-->
                         <div 
                             v-for="(item, index) in this.storyStore.getSelectedBoard.imageEditor.layers" 
                             :key="item.id"
@@ -29,23 +22,6 @@
                                             v-model="item.checked"
                                             @change="uniqueCheckMark"
                                             >
-                                        <!--   v-model="this.getSelectedLayer" 
-                                            v-model="this.storyStore.getSelectedBoard.imageEditor.selectedLayer[0]" 
-                                            @change="uniqueCheckMark"
-                                            
-
-                                        <b-form-checkbox
-                                          name="selected-layer"
-                                          :value=item.id
-                                          :disabled="isDisabledLayer(item)"
-                                          >
-                                            TODO:an error occurs, but why: Uncaught TypeError: assign is not a function at HTMLInputElement.<anonymous>
-                                                ref: https://github.com/bootstrap-vue/bootstrap-vue/discussions/6407
-                                          v-model="item.selected"
-                                          value="true"
-                                          unchecked-value="false"
-                                        >
-                                        </b-form-checkbox>-->
                                     </b-col>
                                     <b-col cols="8">
                                         <input type="text" v-model="item.name" class="layer" style="width:100px;" />
@@ -57,7 +33,6 @@
                                 </b-row>
                             </div>
                         </div>
-                        <!--</b-form-checkbox-group>-->
 
                     </VueDraggable>
                     <!-- Add Button -->
@@ -91,23 +66,14 @@ export default{
             ]*/
         }
     },
+    created(){
+        //this.uniqueCheckMark()
+    },
     computed:{
-        ...mapStores(useStoryContent),
-        /*
-        getLayers(){
-            //this.storyStore.getSelectedBoard.ensureUniqueCheckMark()
-            return this.storyStore.getSelectedBoard.imageEditor.layers
-        },
-        getSelectedLayer(){
-            return this.storyStore.getSelectedBoard.getSelectedLayer()
-        }*/
-    },//TODO:fix this mess of unreactive shit
+        ...mapStores(useStoryContent)
+    },
     methods:{
         uniqueCheckMark(e){
-            this.storyStore.getSelectedBoard.imageEditor.selectedLayer = []
-            if (e.target.checked) {
-                this.storyStore.getSelectedBoard.imageEditor.selectedLayer.push(e.target.value)
-            }
             this.storyStore.getSelectedBoard.imageEditor.layers.forEach(item => {
                 if(item.id==e.target.value){
                     item.checked=true
@@ -121,49 +87,14 @@ export default{
             //const {selectedLayer} = this
             return this.storyStore.getSelectedBoard.getSelectedLayer().length === 1 && !(this.storyStore.getSelectedBoard.getSelectedLayer()[0] === item.id)
         },
-        setSelectedLayer(id){
-            this.storyStore.getSelectedBoard.imageEditor.selectedLayer == []
-            this.storyStore.getSelectedBoard.imageEditor.selectedLayer.push(id) 
-        },
         addLayer(){
             const id = this.storyStore.getSelectedBoard.addLayer()
-            //this.storyStore.getSelectedBoard.setSelectedLayer(id)
-            //this.setSelectedLayer(id)
+            this.storyStore.getSelectedBoard.setSelectedLayer(id)
+            this.storyStore.getSelectedBoard.ensureUniqueCheckMark()
         },
         removeLayer(index){
             this.storyStore.getSelectedBoard.removeLayer(index)
         },
-        /*
-        addLayer() {
-            const code = getRandomIdOrHash(5)
-            this.displayStore.imageEditor.layers.push({
-                name: `layer- ${code}`,
-                id: code,
-                image: null
-            })
-        },
-        removeLayer(index) {
-            this.displayStore.imageEditor.layers.splice(index, 1)
-            const length = this.displayStore.imageEditor.layers.length
-            if(length < 1){
-                this.addLayer()
-                const id = this.displayStore.imageEditor.layers[0].id
-                const sim_event = {
-                    target:{
-                        checked: true,
-                        value: id
-                    }
-                }
-                this.uniqueCheckMark(sim_event)
-            }
-            const ids = this.displayStore.imageEditor.layers.map(item => item.id)
-            const selectedItem = this.displayStore.imageEditor.selectedLayer[0]
-            const isCheckedInLayers = ids.indexOf(selectedItem) 
-            if(isCheckedInLayers==-1){
-                this.displayStore.imageEditor.selectedLayer = []
-                this.displayStore.imageEditor.selectedLayer.push(ids[0])
-            }
-        },*/
     }
 }
 </script>
