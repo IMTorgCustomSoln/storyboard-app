@@ -54,7 +54,7 @@ state
 
  __Test__
 
-AppDisplay
+AppDisplay, StoryContent, Board
 * ~~pane borders move with pointer~~
 * ~~pane title expand~~
 * ~~reset panes~~
@@ -65,3 +65,14 @@ Outline
 * ~~delete board~~
 * ~~move board~~
 * ~~after moving boards, it is not possible to move, again~~ => pinia getters may be redundant. If you want a property to be writable, you don't need a getter
+
+Image
+* board is always selected
+* layer of board-image is always selected
+* new board-image, layer is created on Outline board selection
+* new board-image is saved
+* layers
+  - freehand on layer, then auto-save
+  - add layer
+  - delete layer
+  - always a new layer after layer all previous layers are deleted
