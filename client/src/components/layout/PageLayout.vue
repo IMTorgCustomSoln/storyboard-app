@@ -12,6 +12,13 @@
               @click="saveGrid"
               >Save
             </b-button>
+            <b-button 
+              size="sm" 
+              style="margin:5px"
+              type="button"
+              @click="getCurrentGrid"
+              >Update
+            </b-button>
             <b-nav-item-dropdown text="Choose layout" right>
               <div v-for="option in aspectOptions" :key="option.id">
                 <b-dropdown-item @click="selectLayout(option.name)">
@@ -33,7 +40,7 @@
           <b-col cols="2" style="margin:5px">
             <b-form-input
               placeholder="Layout name"
-              v-model="currentGrid.name"
+              v-model="this.currentGrid.name"
               @input="event => this.currentGrid.name = event.target.value"
               ></b-form-input>
           </b-col>
@@ -44,7 +51,11 @@
                     <div>Page-{{id}}</div>
                     <b-card>
                         <b-aspect :aspect="selectedAspect.layout">
-                            <div v-bind:id="'gs-'+id" class="grid-stack"></div>
+                            <div 
+                              v-bind:id="'gs-'+id" 
+                              class="grid-stack"
+                              >
+                            </div>
                         </b-aspect>
                     </b-card>
                 </b-col>
@@ -81,7 +92,7 @@ export default{
           pages: [
                 {page: 0, id: 0},
                 {page: 1, id: 1},
-            ],
+          ],
 
           gridOptions: {
               //layout
@@ -102,20 +113,32 @@ export default{
         }
     },
     mounted() {
-        this.initialize()
+        this.getCurrentGrid()
     },
     computed:{
       ...mapStores(useStoryContent),
+      getBoards(){
+        return this.storyStore.boards
+      }
     },
     methods:{
-      initialize(){
+    getCurrentGrid(){
         //const NUMBER_OF_ITEMS = 12
         //const items = Array.apply(null, Array( NUMBER_OF_ITEMS )).map(function (x, i) { return {id:i} })
-        const items = this.storyStore.boards
+
+        /*TODO: not reactive with boards!
+        - this could be reactive and change as board images do
+        - maybe this is bad because you may want to save your work, first
+        - is there a better design for this???
+        */
+        const items = this.getBoards
 
         const ITEMS_PER_PAGE = 9
         const NUMBER_OF_PAGES = Math.floor( items.length / ITEMS_PER_PAGE ) + 1
-        this.pages = Array.apply(null, Array( NUMBER_OF_PAGES )).map(function (x, i) { return {id:i, page:i} })
+        this.pages = Array.apply(null, Array( NUMBER_OF_PAGES )
+        ).map(function (x, i) { 
+          return {id:i, page:i} 
+        })
         
         items.forEach((item, index) => {
           const pageIndex = Math.floor(index / ITEMS_PER_PAGE)
@@ -146,13 +169,17 @@ export default{
             ).load(selectedItems)
           this.currentGrid.push(pageGrid)
         }
+        this.currentGrid.name = 'default'
       },
+
+
+
       selectLayout(layout){
         this.selectedAspect = layout
       },
       saveGrid(){
         const serializedGrids = []
-        for(const grid of this.currentGrid){
+        for(const grid of this.getCurrentGrid){
           const serializedFull = grid.save(true, true);
           //const serializedData = serializedFull.children;
           serializedGrids.push( JSON.stringify(serializedFull, null, '  ') )
@@ -168,7 +195,7 @@ export default{
         */
       },
       clearGrid() {
-        this.currentGrid.removeAll();
+        this.getCurrentGrid.removeAll();
       }
 
     }

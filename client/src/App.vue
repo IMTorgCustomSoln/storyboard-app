@@ -48,6 +48,7 @@ data() {
   }
 },
 async created(){
+  //generally used for fetching data from backend API and setting it to data properties
     this.storyStore.initializeStoryFromBackend()
     const boards = await this.storyStore.boards
     this.storyStore.setNewSelectedBoard()
