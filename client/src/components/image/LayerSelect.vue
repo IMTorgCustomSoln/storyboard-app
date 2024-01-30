@@ -3,7 +3,7 @@
                     <p>Check a single layer where the image should be saved.</p>
                     <VueDraggable 
                         ref="el"
-                        v-model="this.getLayers" 
+                        v-model="this.storyStore.getSelectedBoard.imageEditor.layers" 
                         :animation="150"
                         ghostClass="ghost"
                         @start="onStart"
@@ -16,17 +16,24 @@
                             :aria-describedby="ariaDescribedby"
                             name="selected-layer"
                           >-->
-                        <div v-for="(item, index) in this.getLayers" :key="item.id">
+                        <div 
+                            v-for="(item, index) in this.storyStore.getSelectedBoard.imageEditor.layers" 
+                            :key="item.id"
+                            >
                             <div class="column_container">
                                 <b-row>
                                     <b-col cols="2">
                                         <input 
                                             type="checkbox" 
                                             :value="item.id" 
-                                            v-model="this.getSelectedLayer" 
+                                            v-model="item.checked"
                                             @change="uniqueCheckMark"
                                             >
-                                        <!--
+                                        <!--   v-model="this.getSelectedLayer" 
+                                            v-model="this.storyStore.getSelectedBoard.imageEditor.selectedLayer[0]" 
+                                            @change="uniqueCheckMark"
+                                            
+
                                         <b-form-checkbox
                                           name="selected-layer"
                                           :value=item.id
@@ -86,14 +93,14 @@ export default{
     },
     computed:{
         ...mapStores(useStoryContent),
+        /*
         getLayers(){
             //this.storyStore.getSelectedBoard.ensureUniqueCheckMark()
-            const layers = this.storyStore.getSelectedBoard.getLayers()
-            return layers
+            return this.storyStore.getSelectedBoard.imageEditor.layers
         },
         getSelectedLayer(){
             return this.storyStore.getSelectedBoard.getSelectedLayer()
-        }
+        }*/
     },//TODO:fix this mess of unreactive shit
     methods:{
         uniqueCheckMark(e){
@@ -101,11 +108,18 @@ export default{
             if (e.target.checked) {
                 this.storyStore.getSelectedBoard.imageEditor.selectedLayer.push(e.target.value)
             }
+            this.storyStore.getSelectedBoard.imageEditor.layers.forEach(item => {
+                if(item.id==e.target.value){
+                    item.checked=true
+                }else{
+                    item.checked=false
+                }
+            })
         },
         isDisabledLayer(item){
             //TODO: dislpay non-checked layers are disables by dim
             //const {selectedLayer} = this
-            return this.getSelectedLayer.length === 1 && !(this.getSelectedLayer[0] === item.id)
+            return this.storyStore.getSelectedBoard.getSelectedLayer().length === 1 && !(this.storyStore.getSelectedBoard.getSelectedLayer()[0] === item.id)
         },
         setSelectedLayer(id){
             this.storyStore.getSelectedBoard.imageEditor.selectedLayer == []
@@ -113,7 +127,7 @@ export default{
         },
         addLayer(){
             const id = this.storyStore.getSelectedBoard.addLayer()
-            this.storyStore.getSelectedBoard.setSelectedLayer(id)
+            //this.storyStore.getSelectedBoard.setSelectedLayer(id)
             //this.setSelectedLayer(id)
         },
         removeLayer(index){

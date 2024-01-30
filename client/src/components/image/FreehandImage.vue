@@ -68,11 +68,12 @@ export default {
     },
     computed:{
         ...mapStores(useStoryContent),
+        /*
         getGroups(){
-            return this.storyStore.getSelectedBoard.getLayers()
-        },
+            return this.storyStore.getSelectedBoard.imageEditor.layers
+        },*/
         getSelectedGroup(){
-            const layers = this.storyStore.getSelectedBoard.getLayers()
+            const layers = this.storyStore.getSelectedBoard.imageEditor.layers
             const selectedLayer = layers.filter(item => {
                 if(item.id==this.storyStore.getSelectedBoard.getSelectedLayer()){
                     return true
@@ -95,7 +96,7 @@ export default {
             return groupPath
         },
         getUnSelectedGroups(){
-            const layers = this.storyStore.getSelectedBoard.getLayers()
+            const layers = this.storyStore.getSelectedBoard.imageEditor.layers
             const unSelectedLayers = layers.filter(item => {
                 if(item.id!=this.storyStore.getSelectedBoard.getSelectedLayer()){
                     return true
@@ -148,7 +149,7 @@ export default {
         saveSvg(){
             const newPaths = document.querySelector("#layer-TARGET").getInnerHTML()
             const newGroup = '<g>' + newPaths + '</g>'
-            const id = this.storyStore.getSelectedBoard.getSelectedLayer()
+            const id = this.storyStore.getSelectedBoard.imageEditor.selectedLayer[0]
             this.storyStore.getSelectedBoard.appendToLayer(id, newGroup)
         }
     }
