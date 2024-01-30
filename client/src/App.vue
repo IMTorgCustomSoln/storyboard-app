@@ -49,7 +49,7 @@ data() {
 },
 async created(){
     this.storyStore.initializeStoryFromBackend()
-    const boards = await this.storyStore.getBoards
+    const boards = await this.storyStore.boards
     this.storyStore.setNewSelectedBoard()
     if(boards.length>0){
       this.dataLoaded = true
@@ -59,7 +59,7 @@ async created(){
 computed:{
   ...mapStores(useStoryContent),
   isDataLoaded(){
-      if(this.storyStore.boards && this.storyStore.boards.constructor === Array && this.storyStore.getSelectedBoardId!=null){
+      if(this.storyStore.boards && this.storyStore.boards.constructor === Array && this.storyStore.selectedBoardId!=null){
         console.log('DATA LOADED')
         return true
       }else{

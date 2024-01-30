@@ -111,7 +111,7 @@ export default{
       initialize(){
         //const NUMBER_OF_ITEMS = 12
         //const items = Array.apply(null, Array( NUMBER_OF_ITEMS )).map(function (x, i) { return {id:i} })
-        const items = this.storyStore.getBoards
+        const items = this.storyStore.boards
 
         const ITEMS_PER_PAGE = 9
         const NUMBER_OF_PAGES = Math.floor( items.length / ITEMS_PER_PAGE ) + 1

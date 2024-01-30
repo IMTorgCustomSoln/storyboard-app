@@ -5,15 +5,6 @@ export const useAppDisplay = defineStore('display',{
     state: () => {
         return {
             exportAppStateFileName: 'WorkSession.gz',
-            //selectedBoardId: null,
-
-            /*TODO:move to StoryContent for each Board
-            imageEditor:{
-                selectedLayer: [0],
-                layers: [
-                    { name: 'layer-1', id: 0, image: null}
-                ]
-            },*/
 
             splitPanes:{
                 rotateText:{
@@ -46,9 +37,6 @@ export const useAppDisplay = defineStore('display',{
         }
     },
     getters:{
-      getPanes(){
-          return this.splitPanes.panes
-      },
       rotateText(){
           return { transform: 'rotate(' + this.splitPanes.rotateText.turn + 'turn)'}
        },
@@ -89,7 +77,6 @@ export const useAppDisplay = defineStore('display',{
             }
           },
         expandPane(paneName){
-            //const paneName = event.srcElement.innerHTML.replaceAll(" ", "")
             const MaxSize = 200
             const ExpandRules = {
                   Outline:()=>{
@@ -110,7 +97,7 @@ export const useAppDisplay = defineStore('display',{
                   } 
                 }
             ExpandRules[paneName]()
-            const currentSizesByPane = Object.values(this.getPanes).map(item => (
+            const currentSizesByPane = Object.values(this.splitPanes.panes).map(item => (
               {size: item.currentSize}
             ))
             this.showPanes('resize', currentSizesByPane)

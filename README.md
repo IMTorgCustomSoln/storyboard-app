@@ -30,7 +30,7 @@ npm run dev
 
 ## ToDo
 
-__ Staging__
+__Staging__
 
 logic-2
 * board-image clicked => selectedBoardId
@@ -49,5 +49,19 @@ BoardOutline should have similar logic as layers, such asthe following:
 state
 * ~~board-image should be initialized as svg and placeholderimage within `g`~~
 * ~~layers should always be maintained `layers` with board,then created as `g` within image~~
-* ImageEditor will only use data of selected Board
+* ~~ImageEditor will only use data of selected Board~~
  
+
+ __Test__
+
+AppDisplay
+* ~~pane borders move with pointer~~
+* ~~pane title expand~~
+* ~~reset panes~~
+* ~~click Outline > Board > Image, then the pane expands~~
+
+Outline
+* ~~add board~~
+* ~~delete board~~
+* ~~move board~~
+* ~~after moving boards, it is not possible to move, again~~ => pinia getters may be redundant. If you want a property to be writable, you don't need a getter

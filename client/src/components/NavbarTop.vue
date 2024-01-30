@@ -40,7 +40,7 @@ export default {
   methods:{
     resetPanes(){
         this.displayStore.initializeSplitPanes()
-        const currentSizesByPane = Object.values(this.displayStore.getPanes).map(item => (
+        const currentSizesByPane = Object.values(this.displayStore.splitPanes.panes).map(item => (
           {size: item.currentSize}
         ))
         //console.log(currentSizesByPane)

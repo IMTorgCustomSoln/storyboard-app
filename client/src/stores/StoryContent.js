@@ -16,19 +16,10 @@ export const useStoryContent = defineStore('story', {
         }
     },
     getters:{
-        getName(){
-            return this.name
-        },/*
-        async getBoards(){
-            return toRaw(this.boards)
-        },*/
-        getSelectedBoardId(){
-            return this.selectedBoardId
-        },
         getSelectedBoard(){
-            const id = this.getSelectedBoardId
+            const id = this.selectedBoardId
             if([null,undefined].indexOf(id)==-1){
-              const selectedBoard = this.getBoards.filter(item => {
+              const selectedBoard = this.boards.filter(item => {
                 if(item.id==id){ 
                   return true 
                 }else{ 
@@ -40,12 +31,6 @@ export const useStoryContent = defineStore('story', {
               }
             }
             return null
-        },
-        getBoards(){
-            return this.boards
-        },
-        getLayouts(){
-            return this.layouts
         }
     },
     actions:{
@@ -55,9 +40,6 @@ export const useStoryContent = defineStore('story', {
             const DEMO = true
             const boards = []
             if(DEMO){
-                //const parser = new DOMParser()
-                //const lineImage = parser.parseFromString( stringSvgCircle, "image/svg+xml" )
-                //console.log(lineImage)
                 const lineImage = stringSvg
                 boards.push(...[
                 {
@@ -84,9 +66,9 @@ export const useStoryContent = defineStore('story', {
             return true
         },
         isSelectedBoardAvailable(){
-            const id = this.getSelectedBoardId
+            const id = this.selectedBoardId
             if([null,undefined].indexOf(id)==-1){
-              const selectedBoard = this.getBoards.filter(item => {
+              const selectedBoard = this.boards.filter(item => {
                 if(item.id==id){ 
                   return true 
                 }else{ 
@@ -117,7 +99,7 @@ export const useStoryContent = defineStore('story', {
         },
         removeBoard(index){
             this.boards.splice(index, 1)
-            if(this.getBoards.length < 1){
+            if(this.boards.length < 1){
                 this.addBoard()
             }
         },

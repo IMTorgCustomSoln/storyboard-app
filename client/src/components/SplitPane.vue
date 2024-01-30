@@ -6,36 +6,36 @@
       @resize="this.displayStore.showPanes('resize', $event)"
       >
       
-      <Pane min-size="5" :size="this.displayStore.getPanes.outline.currentSize">
+      <Pane min-size="5" :size="this.displayStore.splitPanes.panes.outline.currentSize">
         <h1 
-          :style="this.displayStore.getPanes.outline.headerStyle" 
+          :style="this.displayStore.splitPanes.panes.outline.headerStyle" 
           @click="this.displayStore.expandPane('Outline')"
           >Outline
         </h1>
-        <div v-show="this.displayStore.getPanes.outline.showContent">
+        <div v-show="this.displayStore.splitPanes.panes.outline.showContent">
           <slot name="outline"></slot>
         </div>
       </Pane>
 
-      <Pane min-size="5" :size="this.displayStore.getPanes.image.currentSize">
+      <Pane min-size="5" :size="this.displayStore.splitPanes.panes.image.currentSize">
         <h1 
-          :style="this.displayStore.getPanes.image.headerStyle" 
+          :style="this.displayStore.splitPanes.panes.image.headerStyle" 
           @click="this.displayStore.expandPane('Image')"
           >Image
         </h1>
-        <div v-show="this.displayStore.getPanes.image.showContent">
+        <div v-show="this.displayStore.splitPanes.panes.image.showContent">
           <slot name="image"></slot>
         </div>
       </Pane>
 
       <Pane min-size="5" 
-        :size="this.displayStore.getPanes.layout.currentSize">
+        :size="this.displayStore.splitPanes.panes.layout.currentSize">
         <h1 
-          :style="this.displayStore.getPanes.layout.headerStyle" 
+          :style="this.displayStore.splitPanes.panes.layout.headerStyle" 
           @click="this.displayStore.expandPane('Layout')"
           >Layout
         </h1>
-        <div v-show="this.displayStore.getPanes.layout.showContent">
+        <div v-show="this.displayStore.splitPanes.panes.layout.showContent">
           <slot name="layout"></slot>
         </div>
       </Pane>
@@ -77,7 +77,7 @@ export default{
     computed: {
       ...mapStores(useAppDisplay),
      getLayoutSize(){
-      return 100 - this.displayStore.getPanes.image.currentSize
+      return 100 - this.displayStore.splitPanes.panes.image.currentSize
      }
     },
     methods:{

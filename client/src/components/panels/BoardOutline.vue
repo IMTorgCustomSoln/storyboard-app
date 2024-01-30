@@ -3,7 +3,7 @@
   <!-- Add Content -->
   <div style="margin:10px">
     <VueDraggable 
-      v-model="this.storyStore.getBoards" 
+      v-model="this.storyStore.boards" 
       :animation="150" 
       handle=".handle"
       >
@@ -80,23 +80,8 @@ export default {
   data() {
     return {}
   },
-  /*
-  async created(){
-    //this.storyStore.initializeStoryFromBackend()
-    const boards = await this.storyStore.getBoards
-    this.setNewSelectedBoard()
-    return boards
-  },*/
   computed:{
     ...mapStores(useAppDisplay, useStoryContent),
-    /*
-    isDataLoaded(){
-      if(this.storyStore.boards && this.storyStore.boards.constructor === Array){
-        return true
-      }else{
-        return false
-      }
-    }*/
   },
   methods: {
     hoverHandler(isHovered){
