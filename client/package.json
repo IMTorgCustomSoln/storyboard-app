@@ -21,6 +21,8 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "splitpanes": "^2.4.1",
+    "three": "^0.161.0",
+    "three-gltf-exporter": "^0.0.1",
     "vite-plugin-singlefile": "^0.13.5",
     "vue": "^3.4.5",
     "vue-draggable-plus": "^0.3.4"

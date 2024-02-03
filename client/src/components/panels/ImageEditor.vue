@@ -13,21 +13,30 @@
                     <b-tabs content-class="mt-3">
                         <b-tab title="Freehand" active>
                             <b-container>
-                            <p>Sketch anything by freehand.</p>
-                            <FreeHand @saved="onChildSaved"/>
+                                <p>Sketch anything by freehand.</p>
+                                <FreeHand @saved="onChildSaved"/>
                             </b-container>
                         </b-tab>
                         <b-tab title="Background">
-                            <p>Create backgrounds for your scene.</p>
+                            <b-container>
+                                <p>Create backgrounds for your scene.</p>
+                            </b-container>
                         </b-tab>
                         <b-tab title="Subject">
-                            <p>Design the pose and looks for primary characters.</p>
+                            <b-container>
+                                <p>Design the pose and looks for primary characters.</p>
+                                <CharacterPose @saved="onChildSaved"/>
+                            </b-container>
                         </b-tab>
                         <b-tab title="Foreground">
-                            <p>This can include any additional objects.</p>
+                            <b-container>
+                                <p>This can include any additional objects.</p>
+                            </b-container>
                         </b-tab>
                         <b-tab title="Frame">
-                            <p>Shape and size the view portal to your image.</p>
+                            <b-container>
+                                <p>Shape and size the view portal to your image.</p>
+                            </b-container>
                         </b-tab>
                     </b-tabs>
                 </b-col>
@@ -42,6 +51,7 @@ import { useStoryContent} from '@/stores/StoryContent'
 
 import LayerSelect from '@/components/image/LayerSelect.vue'
 import FreeHand from '@/components/image/FreehandImage.vue'
+import CharacterPose from '@/components/image/CharacterPose.vue'
 
 export default {
     name: 'ImageEditor',
@@ -51,7 +61,8 @@ export default {
     },
     components: {
         LayerSelect,
-        FreeHand
+        FreeHand,
+        CharacterPose
     },
     data() {
         return {/*
