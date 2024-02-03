@@ -17,7 +17,7 @@
 	4.41	beautified by www.freeformatter.com
 	4.5		added individual fingers
 */
-import * as THREE from 'three';
+
 
 const MANNEQUIN_VERSION = 4.5;
 const MANNEQUIN_POSTURE_VERSION = 7;
@@ -29,64 +29,47 @@ const AXIS = {
 };
 
 
-export class MannequinPostureVersionError extends Error{
-	constructor(version){
+class MannequinPostureVersionError extends Error
+{
+	constructor(version)
+	{
 		super('Posture data version ' + version + ' is incompatible with the currently supported version ' + MANNEQUIN_POSTURE_VERSION + '.');
 		this.name = "IncompatibleMannequinError";
 	}
 }
 
 
-export function createScene(idCanvas){
-
-    function drawFrame(){
-        animate(100 * clock.getElapsedTime());
-        renderer.render(scene, camera);
-    }
-
-    function onWindowResize(event){
-		camera.aspect = canvasElement.offsetWidth / canvasElement.offsetHeight;
-		camera.updateProjectionMatrix();
-
-		renderer.setSize(canvasElement.offsetWidth, canvasElement.offsetHeight, true);
-	}
-
-    const canvasElement = document.getElementById(idCanvas)
-
-	const renderer = new THREE.WebGLRenderer({antialias: true});
-	//renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setSize(canvasElement.offsetWidth, canvasElement.offsetHeight);
+function createScene()
+{
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.domElement.style = 'width:100%; height:100%; position:fixed; top:0; left:0;';
 	renderer.shadowMap.enabled = true;
 	renderer.setAnimationLoop(drawFrame);
-    canvasElement.appendChild(renderer.domElement)
-	//document.body.appendChild(renderer.domElement);
+	document.body.appendChild(renderer.domElement);
 
-	const scene = new THREE.Scene();
+	scene = new THREE.Scene();
 	scene.background = new THREE.Color('gainsboro');
 	scene.fog = new THREE.Fog('gainsboro', 100, 600);
 
-	//const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 2000);
-    const camera = new THREE.PerspectiveCamera(30, canvasElement.offsetWidth / canvasElement.offsetHeight, 0.1, 2000);
+	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 2000);
 	camera.position.set(0, 0, 150);
 
-	const light = new THREE.PointLight('white', 0.5);
+	light = new THREE.PointLight('white', 0.5);
 	light.position.set(0, 100, 50);
 	light.shadow.mapSize.width = 1024;
 	light.shadow.mapSize.height = 1024;
 	light.castShadow = true;
 	scene.add(light, new THREE.AmbientLight('white', 0.5));
 
-    /*
-	function onWindowResize(event){
+	function onWindowResize(event)
+	{
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 
 		renderer.setSize(window.innerWidth, window.innerHeight, true);
 	}
-	//window.addEventListener('resize', onWindowResize, false);
-	//onWindowResize();*/
-    canvasElement.addEventListener('resize', onWindowResize, false);
+	window.addEventListener('resize', onWindowResize, false);
 	onWindowResize();
 
 	var ground = new THREE.Mesh(
@@ -101,21 +84,17 @@ export function createScene(idCanvas){
 	ground.rotation.x = -Math.PI / 2;
 	scene.add(ground);
 
-	const clock = new THREE.Clock();
-
-    return {
-        renderer: renderer,
-        scene: scene,
-        camera: camera,
-        light: light
-    }
+	clock = new THREE.Clock();
 } // createScene
 
-/*
-function drawFrame(){
+
+function drawFrame()
+{
 	animate(100 * clock.getElapsedTime());
+	document.body.scene = scene.toJSON()
+	document.body.camera = camera.toJSON()
 	renderer.render(scene, camera);
-}*/
+}
 
 
 // a placeholder function, should be overwritten by the user
@@ -147,13 +126,13 @@ function cos(x)
 
 ////==============================================
 //// Verbatim copy of examples\js\geometries\ParametricGeometry.js
-//( function () {
+( function () {
 
-    /**
+	/**
  * Parametric Surfaces Geometry
  * based on the brilliant article by @prideout https://prideout.net/blog/old/blog/index.html@p=44.html
  */
-export class ParametricGeometry extends THREE.BufferGeometry {
+	class ParametricGeometry extends THREE.BufferGeometry {
 
 		constructor( func = ( u, v, target ) => target.set( u, v, Math.cos( u ) * Math.sin( v ) ), slices = 8, stacks = 8 ) {
 
@@ -265,13 +244,13 @@ export class ParametricGeometry extends THREE.BufferGeometry {
 
 	}
 
-	//THREE.ParametricGeometry = ParametricGeometry;
+	THREE.ParametricGeometry = ParametricGeometry;
 
-//} )();
+} )();
 //==============================================
 
 // create parametric surface
-export class ParametricShape extends THREE.Group
+class ParametricShape extends THREE.Group
 {
 	constructor(tex, col, func, nU = 3, nV = 3)
 	{	
@@ -308,7 +287,7 @@ export class ParametricShape extends THREE.Group
 
 
 // head shape as parametric surface
-export class HeadShape extends ParametricShape
+class HeadShape extends ParametricShape
 {
 	constructor(feminine, params)
 	{
@@ -341,7 +320,7 @@ export class HeadShape extends ParametricShape
 
 
 // shoe shape as parametric surface
-export class ShoeShape extends THREE.Group
+class ShoeShape extends THREE.Group
 {
 	constructor(feminine, params)
 	{
@@ -386,7 +365,7 @@ export class ShoeShape extends THREE.Group
 
 
 // pelvis shape as parametric surface
-export class PelvisShape extends ParametricShape
+class PelvisShape extends ParametricShape
 {
 	constructor(feminine, params)
 	{
@@ -409,7 +388,7 @@ export class PelvisShape extends ParametricShape
 
 
 // limb shape as parametric surface
-export class LimbShape extends ParametricShape
+class LimbShape extends ParametricShape
 {
 	constructor(feminine, params, nU = 24, nV = 12)
 	{
@@ -439,7 +418,7 @@ export class LimbShape extends ParametricShape
 
 
 // torso shape as parametric surface
-export class TorsoShape extends ParametricShape
+class TorsoShape extends ParametricShape
 {
 	constructor(feminine, params)
 	{
@@ -478,7 +457,7 @@ export class TorsoShape extends ParametricShape
 
 
 // flexible joint
-export class Joint extends THREE.Group
+class Joint extends THREE.Group
 {
 	constructor(parentJoint, pos, params, shape)
 	{
@@ -641,7 +620,7 @@ export class Joint extends THREE.Group
 } // Joint
 
 
-export class Pelvis extends Joint
+class Pelvis extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -654,7 +633,7 @@ export class Pelvis extends Joint
 } // Pelvis
 
 
-export class Body extends Joint
+class Body extends Joint
 {
 	constructor(feminine)
 	{
@@ -698,7 +677,7 @@ export class Body extends Joint
 } // Body
 
 
-export class Torso extends Joint
+class Torso extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -741,7 +720,7 @@ export class Torso extends Joint
 } // Torso
 
 
-export class Neck extends Joint
+class Neck extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -754,7 +733,7 @@ export class Neck extends Joint
 } // Neck
 
 
-export class Head extends Joint
+class Head extends Joint
 {
 	static SIZE = {sx:3,sy:4,sz:2.5};
 	
@@ -814,7 +793,7 @@ export class Head extends Joint
 } // Head
 
 
-export class Leg extends Joint
+class Leg extends Joint
 {
 	constructor(parentJoint, leftOrRight)
 	{
@@ -878,7 +857,7 @@ export class Leg extends Joint
 } // Leg
 
 
-export class Knee extends Joint
+class Knee extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -911,7 +890,7 @@ export class Knee extends Joint
 } // Knee
 
 
-export class Ankle extends Joint
+class Ankle extends Joint
 {
 	static SIZE = {sx:1, sy:4, sz:2};
 	
@@ -957,7 +936,7 @@ export class Ankle extends Joint
 } // Ankle
 
 
-export class Arm extends Joint
+class Arm extends Joint
 {
 	constructor(parentJoint, leftOrRight)
 	{
@@ -1026,7 +1005,7 @@ export class Arm extends Joint
 } // Arm
 
 
-export class Elbow extends Joint
+class Elbow extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -1060,7 +1039,7 @@ export class Elbow extends Joint
 } // Elbow
 
 
-export class Wrist extends Joint
+class Wrist extends Joint
 {
 	constructor(parentJoint)
 	{
@@ -1141,7 +1120,7 @@ export class Wrist extends Joint
 } // Wrist
 
 
-export class Phalange extends Joint
+class Phalange extends Joint
 {
 	constructor(parentJoint, params, nailSize)
 	{
@@ -1188,7 +1167,7 @@ export class Phalange extends Joint
 
 
 // size-x, size-y, size-z, alpha, dAlpha, offset, scale, rad
-export class Finger extends Phalange
+class Finger extends Phalange
 {
 	constructor(parentJoint, leftOrRight, number)
 	{
@@ -1289,7 +1268,7 @@ export class Finger extends Phalange
 } // Finger
 
 
-export class Fingers extends Joint
+class Fingers extends Joint
 {
 	// pseudo-object to allow mass control on fingers
 	constructor( finger_0, finger_1, finger_2, finger_3, finger_4 )
@@ -1357,7 +1336,7 @@ export class Fingers extends Joint
 
 
 
-export class Nails extends Joint
+class Nails extends Joint
 {
 	// pseudo-object to allow mass recolor of nails
 	constructor( finger_0, finger_1, finger_2, finger_3, finger_4 )
@@ -1384,7 +1363,7 @@ export class Nails extends Joint
 } // Nails
 
 
-export class Mannequin extends THREE.Group
+class Mannequin extends THREE.Group
 {
 	constructor(feminine, height = 1)
 	{
@@ -1540,11 +1519,10 @@ export class Mannequin extends THREE.Group
 	get posture()
 	{
 		var posture = [
-			[   
+			[
 				Number((this.body.position.x /*+ this.position.x*/).toFixed(1)),
 				Number((this.body.position.y /*+ this.position.y*/).toFixed(1)),
 				Number((this.body.position.z /*+ this.position.z*/).toFixed(1)),
-                
 			],
 			this.body.posture,
 			this.torso.posture,
@@ -1673,7 +1651,7 @@ export class Mannequin extends THREE.Group
 }
 
 
-export class Female extends Mannequin
+class Female extends Mannequin
 {
 	constructor(height = 0.95)
 	{
@@ -1689,7 +1667,7 @@ export class Female extends Mannequin
 } // Female
 
 
-export class Male extends Mannequin
+class Male extends Mannequin
 {
 	constructor(height = 1)
 	{
@@ -1708,7 +1686,7 @@ export class Male extends Mannequin
 } // Male
 
 
-export class Child extends Mannequin
+class Child extends Mannequin
 {
 	constructor(height = 0.65)
 	{
